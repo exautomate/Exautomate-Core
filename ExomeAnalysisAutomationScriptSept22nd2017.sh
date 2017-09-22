@@ -33,6 +33,7 @@ bgzip -d $3.2.gz
 # We can put the unzipping in there if we need to.
 ./formatFix.sh $3.2 $4 $3
 
+#need to add something to do an automatic overwrite
 bgzip -c $3 > $3.gz
 
 #Clean up .vcf . If needed again unzip the $3 with gunzip
