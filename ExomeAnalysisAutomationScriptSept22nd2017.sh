@@ -66,7 +66,7 @@ awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5
 ./table_annovar.pl $3.noMissXY.vcf.gz humandb/ -buildver hg19 -out $3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
 
 #Calling conversion script
-./AnnovarToSetID.sh $3.noMissXY.anno.hg19_multianno.txt $3.SetID
+./AnnovarToSetID.sh $3.noMissXY.anno.hg19_multianno.txt $3
 
 echo "Exome Analysis Script complete. Results are in " $5 " and the vcf file made is found in " $3.noMissXY.vcf.gz
 
