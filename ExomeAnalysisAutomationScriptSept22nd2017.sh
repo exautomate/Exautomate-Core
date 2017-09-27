@@ -56,7 +56,7 @@ plink --file $3.noMissXY --make-bed --out $5 --noweb
 
 #rm $3.noMissXY
 
-awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5.fam > $5.fam
+awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5.fam > $5.adj.fam
 
 #-----------------
 #----Begin ANNOVAR
