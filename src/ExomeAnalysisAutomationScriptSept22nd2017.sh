@@ -10,7 +10,7 @@
 # $6 is the kernel to run.
 # $7 is the vcf file which has all the cases.
 
-#Credit to biostars answer. This takes the number of samples from the vcf file to be merged together.
+#This takes the number of samples from the vcf file to be merged together.
 echo "It gets this far"
 numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
 echo "Finished counting controls - " $numControls
@@ -31,6 +31,7 @@ bgzip -d $3.2.gz
 # SED COMMAND SCRIPT THAT BRENT MADE! this is to fix the formatting inconsistancies that were generated from the merging steps
 # can the input be a gzvcf file? if not, then we need to add in a step to unzip the file
 # We can put the unzipping in there if we need to.
+echo "Calling formatFix.sh"
 ./formatFix.sh $3.2 $4 $3
 
 #need to add something to do an automatic overwrite
@@ -41,17 +42,13 @@ bgzip -c $3 > $3.gz
 
 # removes any position with missing data (. or 1/.)
 vcftools --gzvcf $3.gz --max-missing 1 --recode --stdout | gzip -c > $3.noMiss.vcf.gz
-
 # removes X and Y chromosome positions
 vcftools --gzvcf $3.noMiss.vcf.gz --not-chr X --not-chr Y --recode --stdout | gzip -c > $3.noMissXY.vcf.gz
-
 #rm $3.noMiss.vcf.gz
 
 # generation of plink and binary plink files
 vcftools --gzvcf $3.noMissXY.vcf.gz --plink --out $3.noMissXY
-
 #rm $3.noMiss.vcf.gz
-
 plink --file $3.noMissXY --make-bed --out $5 --noweb
 
 #rm $3.noMissXY
@@ -66,7 +63,7 @@ awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
 ./table_annovar.pl $3.noMissXY.vcf.gz humandb/ -buildver hg19 -out $3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
 
-#Calling conversion script
+#Calling conversion script.
 ./AnnovarToSetID.sh $3.noMissXY.anno.hg19_multianno.txt $3
 
 echo "Exome Analysis Script complete. Results are in " $5 " and the vcf file made is found in " $3.noMissXY.vcf.gz
@@ -74,6 +71,6 @@ echo "Exome Analysis Script complete. Results are in " $5 " and the vcf file mad
 
 echo "Running SKAT"
 
-Rscript RunSkat.R $5.bed $5.bim $5.fam $3.SetID "SSD_File.SSD" $6
+Rscript RunSkat.R $5.bed $5.bim $5.adj.fam $3.SetID "SSD_File.SSD" $6
 
 echo "SKAT complete."
