@@ -33,7 +33,6 @@ bgzip -d $3.2.gz
 # We can put the unzipping in there if we need to.
 ./formatFix.sh $3.2 $4 $3
 
-#need to add something to do an automatic overwrite
 bgzip -c $3 > $3.gz
 
 #Clean up .vcf . If needed again unzip the $3 with gunzip
@@ -56,7 +55,7 @@ plink --file $3.noMissXY --make-bed --out $5 --noweb
 
 #rm $3.noMissXY
 
-awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5.fam > $5.fam
+awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5.fam > $5.fix.fam
 
 #-----------------
 #----Begin ANNOVAR
@@ -74,6 +73,6 @@ echo "Exome Analysis Script complete. Results are in " $5 " and the vcf file mad
 
 echo "Running SKAT"
 
-Rscript RunSkat.R $5.bed $5.bim $5.fam $3.SetID "SSD_File.SSD" $6
+Rscript RunSkat.R $5.bed $5.bim $5.fix.fam $3.SetID "SSD_File.SSD" $6
 
 echo "SKAT complete."
