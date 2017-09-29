@@ -8,27 +8,33 @@
 # args[6] = Kernel type.
 #Using example from SKAT Vignette. Update with more options as requested.
 require(SKAT)
+require(ggplot2)
+require(reshape2)
 library(SKAT)
- 
- 
- 
+library(ggplot2)
+library(reshape2)
+
+
+
 args <- commandArgs(trailingOnly = TRUE)
- 
+
 SSD.Info <- paste(args[5],".info",sep="")
- 
+
 #Using arguments from commandline.
 Generate_SSD_SetID(args[1],args[2],args[3],args[4],args[5],SSD.Info)
- 
+
 FAM <- Read_Plink_FAM(c(args[3]))
 y <- FAM$Phenotype
- 
+
 SSD_INFO_FILE <- Open_SSD(args[5],SSD.Info)
- 
+
 #Output type should be changed depending on whether dichotomous or continous output type.
 obj <- SKAT_Null_Model(y~1,out_type="D")
 out <- SKAT.SSD.All(SSD_INFO_FILE,obj,kernel=args[6],method="optimal.adj")
 
 write.table(out$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
+
+ggplot(melt(Linear$results$P.value),mapping=aes(x=Linear$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
 
 #save workspace
 save(list=ls(all.names=TRUE),file="SKATResults.RData",envir= .GlobalEnv);
