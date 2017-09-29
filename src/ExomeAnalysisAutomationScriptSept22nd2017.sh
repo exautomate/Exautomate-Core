@@ -12,7 +12,8 @@
 
 #This takes the number of samples from the vcf file to be merged together.
 echo "It gets this far"
-numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
+#numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
+numControls=$7
 echo "Finished counting controls - " $numControls
 
 
