@@ -8,7 +8,7 @@
 # $4 is the number of header files in the vcf file.
 # $5 is the name for the file to be put on the plink output files.
 # $6 is the kernel to run.
-# $7 is the vcf file which has all the cases.
+# $7 is the number of controls.
 
 #This takes the number of samples from the vcf file to be merged together.
 #numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
