@@ -5,3 +5,5 @@
 # $2 - Output file name
 
 plink --noweb --simulate $1 --make-bed --out $2
+
+#Use java script to create
