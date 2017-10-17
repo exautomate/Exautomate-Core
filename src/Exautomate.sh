@@ -61,7 +61,11 @@ elif [ $choice -eq 2 ]; then
 
 
 elif [ $choice -eq 3 ]; then
+#Requires wget.
+#Fragile. If the location of the 1000 genome files are moved then this will fail.
   echo "To be implemented"
+
+  wget -A ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/*.vcf.*
 
 elif [ $choice -eq 4 ]; then
 
