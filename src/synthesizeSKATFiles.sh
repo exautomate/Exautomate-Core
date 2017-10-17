@@ -5,3 +5,14 @@
 # $2 - Output file name
 
 plink --noweb --simulate $1 --make-bed --out $2
+
+<<<<<<< Updated upstream
+#Use java script to create
+=======
+javac MakeArtificialSetID.java
+
+read -p "Enter the number of snps to be in each 'gene': " choice
+echo ""
+
+java MakeArtificialSetID $2.bim $choice
+>>>>>>> Stashed changes

@@ -36,5 +36,7 @@ write.table(out$results, file="./SKAToutput.results.txt", col.names=TRUE, row.na
 
 ggplot(melt(Linear$results$P.value),mapping=aes(x=Linear$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
 
+ggsave("ExomeRunOutput.pdf")
+
 #save workspace
 save(list=ls(all.names=TRUE),file="SKATResults.RData",envir= .GlobalEnv);

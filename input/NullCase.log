@@ -1,0 +1,44 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Skipping web check... [ --noweb ] 
+Writing this text to log file [ NullCase.log ]
+Analysis started: Sun Apr  9 23:52:20 2017
+
+Options in effect:
+	--simulate NullCase.sim
+	--make-bed
+	--out NullCase
+	--simulate-ncases 200
+	--simulate-ncontrols 800
+	--noweb
+
+Reading simulation parameters from [ NullCase.sim ]
+Writing SNP population frequencies to [ NullCase.simfreq ]
+Read 3 sets of SNPs, specifying 210000 SNPs in total
+Simulating 200 cases and 800 controls
+Assuming a disease prevalence of 0.01
+Simulating disease variants (direct association)
+
+Before frequency and genotyping pruning, there are 210000 SNPs
+1000 founders and 0 non-founders found
+Total genotyping rate in remaining individuals is 1
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 210000 SNPs
+After filtering, 200 cases, 800 controls and 0 missing
+After filtering, 0 males, 1000 females, and 0 of unspecified sex
+Writing pedigree information to [ NullCase.fam ] 
+Writing map (extended format) information to [ NullCase.bim ] 
+Writing genotype bitfile to [ NullCase.bed ] 
+Using (default) SNP-major mode
+
+Analysis finished: Sun Apr  9 23:52:39 2017
+

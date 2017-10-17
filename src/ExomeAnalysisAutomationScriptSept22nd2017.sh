@@ -8,11 +8,11 @@
 # $4 is the number of header files in the vcf file.
 # $5 is the name for the file to be put on the plink output files.
 # $6 is the kernel to run.
-# $7 is the vcf file which has all the cases.
+# $7 is the number of controls.
 
 #This takes the number of samples from the vcf file to be merged together.
-echo "It gets this far"
-numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
+#numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
+numControls=$7
 echo "Finished counting controls - " $numControls
 
 
@@ -31,7 +31,7 @@ bgzip -d $3.2.gz
 # SED COMMAND SCRIPT THAT BRENT MADE! this is to fix the formatting inconsistancies that were generated from the merging steps
 # can the input be a gzvcf file? if not, then we need to add in a step to unzip the file
 # We can put the unzipping in there if we need to.
-echo "Calling formatFix.sh"
+echo "Calling formatFix"
 ./formatFix.sh $3.2 $4 $3
 
 #need to add something to do an automatic overwrite
