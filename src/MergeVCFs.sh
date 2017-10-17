@@ -9,4 +9,5 @@
 #Does not deal with the dos vs unix file formating problems we've encountered before. To be added?
 
 java -jar GenomeAnalysisTK.jar -T CombineVariants -R $3 -V $1 -V $2 -o $4 -genotypeMergeOptions UNIQUIFY -env
+##TEST
 java -jar GenomeAnalysisTK.jar -T ValidateVariants -R $3 -V $4 --validationTypeToExclude ALL

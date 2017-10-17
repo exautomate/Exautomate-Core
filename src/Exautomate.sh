@@ -25,8 +25,6 @@ if [ $choice -eq 1 ]; then
   read -p "Choose filename for output plink files (no extension): " plinkOutput
   echo ""
 
-
-
   read -p "Enter the kernel to be used in the analysis: " kernel
   echo ""
 
@@ -46,10 +44,19 @@ elif [ $choice -eq 2 ]; then
   read -p "Enter the name of the cases vcf: " casesvcf
   echo ""
 
-  read -p "Enter the name of the output file: " outputName
+  read -p "Enter the name of the output file: " vcfInput
 
-  ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $outputName
+  ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
 
+  read -p "Enter the desired name of the processed vcf: "
+
+  read -p "Choose filename for output plink files (no extension): " plinkOutput
+  echo ""
+
+  read -p "Enter the kernel to be used in the analysis: " kernel
+  echo ""
+
+  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls
 
 
 
