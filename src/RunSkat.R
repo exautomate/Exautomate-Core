@@ -32,6 +32,9 @@ SSD_INFO_FILE <- Open_SSD(args[5],SSD.Info)
 obj <- SKAT_Null_Model(y~1,out_type="D")
 out <- SKAT.SSD.All(SSD_INFO_FILE,obj,kernel=args[6],method="optimal.adj")
 
+##Add QQplot SSD.Binary.
+##Add bonferoni correction to the p values here.##
+
 write.table(out$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
 
 ggplot(melt(Linear$results$P.value),mapping=aes(x=Linear$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
