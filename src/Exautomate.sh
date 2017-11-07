@@ -25,12 +25,26 @@ if [ $choice -eq 1 ]; then
   read -p "Choose filename for output plink files (no extension): " plinkOutput
   echo ""
 
+  echo "Kernels: linear, linear.weighted, quadratic, IBS, 2wayIX"
   read -p "Enter the kernel to be used in the analysis: " kernel
   echo ""
 
+#Handles the choice of methods that are available for different kernels.
+  if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
+    read -p "Choose SKAT or SKAT-O: " choice
+    if [ "$choice" == "SKAT-O" ]; then
+      method = "optimal.adj"
+    else
+      method = "davies"
+    fi
+  else
+    method = "davies"
+  fi
+
+
   #Put in if statements asking for optimal.adj if the kernel is linear or linear weighted, and errors for unknown ones.
 
-  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls
+  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 elif [ $choice -eq 2 ]; then
 
@@ -56,7 +70,20 @@ elif [ $choice -eq 2 ]; then
   read -p "Enter the kernel to be used in the analysis: " kernel
   echo ""
 
-  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls
+  #Handles the choice of methods that are available for different kernels.
+    if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
+      read -p "Choose SKAT or SKAT-O: " choice
+      if [ "$choice" == "SKAT-O" ]; then
+        method = "optimal.adj"
+      else
+        method = "davies"
+      fi
+    else
+      method = "davies"
+    fi
+
+
+  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 
 
@@ -80,6 +107,17 @@ elif [ $choice -eq 4 ]; then
 
   read -p "Enter the kernel to run on the synthetic files: " kernel
   echo ""
+  #Handles the choice of methods that are available for different kernels.
+    if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
+      read -p "Choose SKAT or SKAT-O: " choice
+      if [ "$choice" == "SKAT-O" ]; then
+        method = "optimal.adj"
+      else
+        method = "davies"
+      fi
+    else
+      method = "davies"
+    fi
 
   echo "Running SKAT"
   Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel

@@ -9,6 +9,7 @@
 # $5 is the name for the file to be put on the plink output files.
 # $6 is the kernel to run.
 # $7 is the number of controls.
+# $8 is the method for SKAT (SKAT-O, SKAT, etc)
 
 #This takes the number of samples from the vcf file to be merged together.
 #numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $7)
