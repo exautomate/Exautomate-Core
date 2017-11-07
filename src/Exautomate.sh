@@ -27,7 +27,6 @@ while [ $choice -ne 5]; do
     read -p -e "Choose filename for output plink files (no extension): " plinkOutput
     echo ""
 
-<<<<<<< HEAD
   echo "Kernels: linear, linear.weighted, quadratic, IBS, 2wayIX"
   read -p "Enter the kernel to be used in the analysis: " kernel
   echo ""
@@ -48,7 +47,6 @@ while [ $choice -ne 5]; do
   #Put in if statements asking for optimal.adj if the kernel is linear or linear weighted, and errors for unknown ones.
 
   ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
-=======
     #make a file called kernelist.txt with all valid kernel names.
     more kernellist.txt
     read -p -e "Enter the kernel to be used in the analysis: " kernel
@@ -57,7 +55,6 @@ while [ $choice -ne 5]; do
     #Put in if statements asking for optimal.adj if the kernel is linear or linear weighted, and errors for unknown ones.
 
     ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls
->>>>>>> cde13b9b8eb382f2ae4ca03c48840bb84c779891
 
   elif [ $choice -eq 2 ]; then
 
@@ -82,8 +79,7 @@ while [ $choice -ne 5]; do
 
     read -p -e "Enter the kernel to be used in the analysis: " kernel
     echo ""
-
-<<<<<<< HEAD
+    
   #Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
       read -p "Choose SKAT or SKAT-O: " choice
@@ -98,9 +94,6 @@ while [ $choice -ne 5]; do
 
 
   ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
-=======
-    ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls
->>>>>>> cde13b9b8eb382f2ae4ca03c48840bb84c779891
 
 
 
@@ -121,7 +114,7 @@ while [ $choice -ne 5]; do
     read -p "Enter the filename of the .sim file to be used: " simInput
     echo ""
 
-<<<<<<< HEAD
+
   read -p "Enter the kernel to run on the synthetic files: " kernel
   echo ""
   #Handles the choice of methods that are available for different kernels.
@@ -135,10 +128,9 @@ while [ $choice -ne 5]; do
     else
       method = "davies"
     fi
-=======
+
     read -p "Enter the filename for the output: " outputName
     echo ""
->>>>>>> cde13b9b8eb382f2ae4ca03c48840bb84c779891
 
     ./synthesizeSKATFiles.sh $simInput $outputName
 
