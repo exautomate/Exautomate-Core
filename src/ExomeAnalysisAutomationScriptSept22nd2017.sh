@@ -18,7 +18,7 @@ echo "Finished counting controls - " $numControls
 
 
 #Use Jacqueline's merging script here.
-
+##PUT IN DEPENDENCIES ##
 java -jar GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o $3 -restrictAllelesTo BIALLELIC -selectType SNP
 bgzip -c $3 > $3.gz
 #rm $2.biAllelic.vcf
@@ -62,6 +62,7 @@ awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' $5
 #Requires ANNOVAR perl scripts available in the local folder.
 #Can automate to take the file location later.
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
+####UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER #######
 ./table_annovar.pl $3.noMissXY.vcf.gz humandb/ -buildver hg19 -out $3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
 
 #Calling conversion script.
