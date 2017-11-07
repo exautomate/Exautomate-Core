@@ -4,9 +4,9 @@
 ###### Requirements: R (plus packages), Java, GATK, Plink, Vcftools, Annovar.
 clear
 echo "Welcome to Ex-Automate."
-choice = 0
+choice=0
 
-while [ $choice -ne 5]; do
+while [ $choice -ne 5 ]; do
   printf "1: Pre-merged vcf \n 2: Merge case and control vcf for analysis. \n 3: Retrieve 1000 Genomes options \n 4: Synthetic run \n 5: Exit \n"
   read -p "Enter (1-4): " choice
   if [ $choice -eq 1 ]; then
@@ -104,8 +104,24 @@ while [ $choice -ne 5]; do
 
     mkdir ./1000gvcf
 
-    wget -r --no-parent -A '*.vcf.*' -P /1000gvcf/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    #change the *.vcf.* pattern to get different files.
+    wget -r --no-parent -A '*.vcf.*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    echo "Finished retrieval. Beginning concatenation."
+
     vcf-concat /1000gvcf/*.vcf.gz | gzip -c > ./merged1000gvcf.gz
+    echo "Finished concatenation."
+
+    ls *.bed ../dependencies/*.bed
+    read -p -e "Enter the name of the .bed file to filter by: " bedFile
+
+    tabix -R $bedFile merged1000gvcf.gz
+
+    echo "Finished filtering file."
+
+    read -p "Delete original thousand genome files? y/n: " deleteFlag
+    if [ "$deleteFlag" -eq "y"  ]; then
+        rm ./1000gvcf/*
+    fi
 
 
   elif [ $choice -eq 4 ]; then
