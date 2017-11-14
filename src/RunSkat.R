@@ -5,7 +5,8 @@
 # args[3] = .fam file
 # args[4] = .SetID file
 # args[5] = SSD File Name inc extension
-# args[6] = Kernel type.
+# args[6] = Kernel type
+# args[7] = Method type
 #Using example from SKAT Vignette. Update with more options as requested.
 require(SKAT)
 require(ggplot2)
@@ -33,11 +34,13 @@ obj <- SKAT_Null_Model(y~1,out_type="D")
 out <- SKAT.SSD.All(SSD_INFO_FILE,obj,kernel=args[6],method="optimal.adj")
 
 ##Add QQplot SSD.Binary.
+
 ##Add bonferoni correction to the p values here.##
+outAdj <- p.adjust(out$results$P.value,method="holm")
 
-write.table(out$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
+write.table(outAdj$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
 
-ggplot(melt(Linear$results$P.value),mapping=aes(x=Linear$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
+ggplot(melt(outAdj$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
 
 ggsave("ExomeRunOutput.pdf")
 

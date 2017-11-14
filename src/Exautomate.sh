@@ -43,18 +43,8 @@ while [ $choice -ne 5 ]; do
     method = "davies"
   fi
 
-
-  #Put in if statements asking for optimal.adj if the kernel is linear or linear weighted, and errors for unknown ones.
-
-  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
-    #make a file called kernelist.txt with all valid kernel names.
-    more kernellist.txt
-    read -p -e "Enter the kernel to be used in the analysis: " kernel
-    echo ""
-
-    #Put in if statements asking for optimal.adj if the kernel is linear or linear weighted, and errors for unknown ones.
-
-    ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls
+  ./ExautomateBackEnd ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+    #make a file called kernellist.txt with all valid kernel names.
 
   elif [ $choice -eq 2 ]; then
 
@@ -79,7 +69,7 @@ while [ $choice -ne 5 ]; do
 
     read -p -e "Enter the kernel to be used in the analysis: " kernel
     echo ""
-    
+
   #Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
       read -p "Choose SKAT or SKAT-O: " choice
@@ -93,7 +83,7 @@ while [ $choice -ne 5 ]; do
     fi
 
 
-  ./ExomeAnalysisAutomationScript ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 
 
@@ -154,7 +144,7 @@ while [ $choice -ne 5 ]; do
     echo ""
 
     echo "Running SKAT"
-    Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel
+    Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel $method
     echo "SKAT complete."
     mv $outputName.* ../output/$outputName.*
 
