@@ -73,6 +73,6 @@ echo "Exome Analysis Script complete. Results are in " $5 " and the vcf file mad
 
 echo "Running SKAT"
 
-Rscript RunSkat.R $5.bed $5.bim $5.adj.fam $3.SetID "SSD_File.SSD" $6
+Rscript RunSkat.R $5.bed $5.bim $5.adj.fam $3.SetID "SSD_File.SSD" $6 $8
 
 echo "SKAT complete."
