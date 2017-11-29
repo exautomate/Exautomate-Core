@@ -95,7 +95,12 @@ while [ $choice -ne 5 ]; do
     mkdir ./1000gvcf
 
     #change the *.vcf.* pattern to get different files.
-    wget -r --no-parent -A '*.vcf.*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    #-r is recursive search down
+    # -l1 is a max recursion depth of 1 (avoid downloading supporting files)
+    # --no-parent avoids going up the file path.
+    # -A "*" specifies the pattern to download.
+    # -nc is to avoid overwriting existing files.
+    wget -r -l1 -nc --no-parent -A '*.vcf.*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
     echo "Finished retrieval. Beginning concatenation."
 
     vcf-concat /1000gvcf/*.vcf.gz | gzip -c > ./merged1000gvcf.gz
