@@ -101,9 +101,12 @@ while [ $choice -ne 5 ]; do
     # -A "*" specifies the pattern to download.
     # -nc is to avoid overwriting existing files.
     wget -r -l1 -nc --no-parent -A '*.vcf.*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+
+    #Very specific move function to move the downloaded files into the 1000gvcf folder.
+    mv ./ftp*/vol1/ftp/release/20130502/*.vcf.* ../../../../../1000gvcf/
     echo "Finished retrieval. Beginning concatenation."
 
-    vcf-concat /1000gvcf/*.vcf.gz | gzip -c > ./merged1000gvcf.gz
+    vcf-concat ./1000gvcf/*.vcf.gz | gzip -c > ./1000gvcf/merged1000gvcf.gz
     echo "Finished concatenation."
 
     ls *.bed ../dependencies/*.bed
