@@ -90,7 +90,7 @@ while [ $choice -ne 5 ]; do
   elif [ $choice -eq 3 ]; then
   #Requires wget and vcftools
   #Fragile. If the location of the 1000 genome files are moved then this will fail.
-    echo "To be implemented"
+    #echo "To be implemented"
 
     mkdir ./1000gvcf
 
@@ -100,11 +100,15 @@ while [ $choice -ne 5 ]; do
     # --no-parent avoids going up the file path.
     # -A "*" specifies the pattern to download.
     # -nc is to avoid overwriting existing files.
-    wget -r -l1 -nc --no-parent -A '*.vcf.*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    # -nd is to avoid downloading the directo tree and just the files.
+    #wget -r -l1 -nc -nd --no-parent -A '*.vcf.*' -R '*chrX*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
 
     #Very specific move function to move the downloaded files into the 1000gvcf folder.
-    mv ./ftp*/vol1/ftp/release/20130502/*.vcf.* ../../../../../1000gvcf/
+    #mv ./ftp*/vol1/ftp/release/20130502/*.vcf.* ../../../../../1000gvcf/
     echo "Finished retrieval. Beginning concatenation."
+
+    #Necessary for first time install. Exits quickly if already installed.
+    ##apt install vcftools <- put into Installer.sh
 
     vcf-concat ./1000gvcf/*.vcf.gz | gzip -c > ./1000gvcf/merged1000gvcf.gz
     echo "Finished concatenation."

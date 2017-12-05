@@ -1,3 +1,6 @@
 
 *.tbi
 *.gz
+/dependencies/*/
+*.zip
+*.bz2
