@@ -99,9 +99,10 @@ while [ $choice -ne 5 ]; do
     # -l1 is a max recursion depth of 1 (avoid downloading supporting files)
     # --no-parent avoids going up the file path.
     # -A "*" specifies the pattern to download.
+    # -R "*chrX*" rejects all files with chrX. This is because we're not including sex chromosomes or MT in our analysis. Modify as desired.
     # -nc is to avoid overwriting existing files.
-    # -nd is to avoid downloading the directo tree and just the files.
-    #wget -r -l1 -nc -nd --no-parent -A '*.vcf.*' -R '*chrX*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    # -nd is to avoid downloading the directory tree and just the files.
+    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
 
     #Very specific move function to move the downloaded files into the 1000gvcf folder.
     #mv ./ftp*/vol1/ftp/release/20130502/*.vcf.* ../../../../../1000gvcf/
