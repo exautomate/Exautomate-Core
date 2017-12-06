@@ -111,13 +111,13 @@ while [ $choice -ne 5 ]; do
     #Necessary for first time install. Exits quickly if already installed.
     ##apt install vcftools <- put into Installer.sh
 
-    vcf-concat ./1000gvcf/*.vcf.gz | gzip -c > ./1000gvcf/merged1000gvcf.gz
+    vcf-concat ./1000gvcf/*.vcf.gz | gzip -c > ./1000gvcf/merged1000g.vcf.gz
     echo "Finished concatenation."
 
     ls *.bed ../dependencies/*.bed
     read -p -e "Enter the name of the .bed file to filter by: " bedFile
 
-    tabix -R $bedFile merged1000gvcf.gz
+    tabix -R $bedFile merged1000g.vcf.gz
 
     echo "Finished filtering file."
 
