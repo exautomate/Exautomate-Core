@@ -94,13 +94,14 @@ while [ $choice -ne 5 ]; do
     mkdir ./1000gvcf
 
     #change the *.vcf.* pattern to get different files.
+    # -r is recursive search down
     # -l1 is a max recursion depth of 1 (avoid downloading supporting files)
     # --no-parent avoids going up the file path.
     # -A "*" specifies the pattern to download.
     # -R "*chrX*" rejects all files with chrX. This is because we're not including sex chromosomes or MT in our analysis. Modify as desired.
     # -nc is to avoid overwriting existing files.
     # -nd is to avoid downloading the directory tree and just the files.
-    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','chrY' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
 
     #Very specific move function to move the downloaded files into the 1000gvcf folder.
     #mv ./ftp*/vol1/ftp/release/20130502/*.vcf.* ../../../../../1000gvcf/
@@ -108,12 +109,19 @@ while [ $choice -ne 5 ]; do
 
     #Necessary for first time install. Exits quickly if already installed.
     ##apt install vcftools <- put into Installer.sh
+    vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
+    echo "Finished concatenation. Sorting."
 
-    echo "Finished concatenation."
+    #When I run this, I set the -Xmx option based on my system. Typically to 50-60g
+    mkdir ../tmpdir
+    java -jar ../dependencies/picard.jar SortVcf I=./1000gvcf/merged1000g.vcf.gz O=../output/sorted1000g.vcf.gz TMP_DIR=../tmpdir/
+    rm -r ../tmpdir
 
-    ls *.bed ../dependencies/*.bed
+    ls *.bed
+    ls ../dependencies/*.bed
     read -p -e "Enter the name of the .bed file to filter by: " bedFile
 
+    tabix -T $bedFile merged1000gvcf.gz
 
     echo "Finished filtering file."
 

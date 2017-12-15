@@ -1,3 +1,4 @@
+#!/bin/bash
 #Install file for Exautomate.
 
 #Switch from src to dependencies.
@@ -8,6 +9,7 @@ apt install tabix
 
 #Required
 apt install vcftools
+apt-get install bedtools
 
 #Preference
 apt install dtrx

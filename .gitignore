@@ -4,3 +4,11 @@
 /dependencies/*/
 *.zip
 *.bz2
+dependencies/agilent.bed
+*.swp
+*.bgz
+*.bed
+*.jar
+dependencies/1000Geuro.txt
+*.so
+src/agilent.bed
