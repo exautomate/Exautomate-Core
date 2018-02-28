@@ -12,3 +12,15 @@ dependencies/agilent.bed
 dependencies/1000Geuro.txt
 *.so
 src/agilent.bed
+output/test.pdf
+output/test
+*.fasta
+*.dict
+*.fai
+*.vcf
+*.csi
+*.idx
+*.bedtoolsrun
+src/=
+*.7z
+src/1000gvcf/hs_err_pid1164.log

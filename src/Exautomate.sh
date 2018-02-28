@@ -121,7 +121,11 @@ while [ $choice -ne 5 ]; do
     ls ../dependencies/*.bed
     read -p -e "Enter the name of the .bed file to filter by: " bedFile
 
+#Not sure this works with current tabix.
     tabix -T $bedFile merged1000gvcf.gz
+
+    #Command to filter based on a list of names from the population files. Made in R.
+    #bcftools view -s allButEur2.csv -S merged1000gbgzip.vcf.gz > allbuteur.bgzip.vcf.gz
 
     echo "Finished filtering file."
 
