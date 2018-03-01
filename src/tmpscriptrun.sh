@@ -14,6 +14,10 @@ for i in `seq 2 9`;
 do
   if [ $i -eq 2 ]
   then
+    ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    mv ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ALL.chr01.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    mv ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ALL.chr02.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
     java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V ALL.chr01.phase3_shapeit2_mvncall_integrated_v5a.20140502.genotypes.vcf -V ALL.chr02.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf
   else
     q=$(($i-1))
