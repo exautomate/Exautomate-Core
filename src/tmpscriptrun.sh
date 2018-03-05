@@ -14,17 +14,25 @@ for i in `seq 2 9`;
 do
   if [ $i -eq 2 ]
   then
-    java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V ALL.chr01.phase3_shapeit2_mvncall_integrated_v5a.20140502.genotypes.vcf -V ALL.chr02.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf
+    bgzip -d ALL.chr01.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    bgzip -d ALL.chr02.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V ALL.chr01.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -V ALL.chr02.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf -assumeSorted
+    rm  ALL.chr01.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
+    rm  ALL.chr02.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
   else
     q=$(($i-1))
-    java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V GATK1000GenomeCatVariantsFeb16th2018v$q.vcf -V ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf
+    bgzip -d ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+    java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V GATK1000GenomeCatVariantsFeb16th2018v$q.vcf -V ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf -assumeSorted
     rm GATK1000GenomeCatVariantsFeb16th2018v$q.vcf
+    rm ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
   fi
 done
 
-for i in `seq 10 22`;
+for i in `seq 12 22`;
 do
   q=$(($i-1))
-  java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V GATK1000GenomeCatVariantsFeb16th2018v$q.vcf -V ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf
+  bgzip -d ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+  java -Xmx45g -cp ../../dependencies/GenomeAnalysisTK-3.8-0-ge9d806836/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ../../dependencies/human_g1k_v37.fasta -V GATK1000GenomeCatVariantsFeb16th2018v$q.vcf -V ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf -out GATK1000GenomeCatVariantsFeb16th2018v$i.vcf -assumeSorted
   rm GATK1000GenomeCatVariantsFeb16th2018v$q.vcf.gz
+  rm ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
 done
