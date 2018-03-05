@@ -7,7 +7,7 @@ echo "Welcome to Ex-Automate."
 choice=0
 
 while [ $choice -ne 5 ]; do
-  printf "1: Pre-merged vcf \n 2: Merge case and control vcf for analysis. \n 3: Retrieve 1000 Genomes options \n 4: Synthetic run \n 5: Exit \n"
+  printf " 1: Pre-merged vcf \n 2: Merge case and control vcf for analysis. \n 3: Retrieve 1000 Genomes options \n 4: Synthetic run \n 5: Exit \n"
   read -p "Enter (1-4): " choice
   if [ $choice -eq 1 ]; then
 
@@ -48,36 +48,44 @@ while [ $choice -ne 5 ]; do
 
   elif [ $choice -eq 2 ]; then
 
-    ls ../input/*.vcf.gz ../input/*.vcf
+    ls  ../input/*.vcf
     read -e -p 'Enter the name of the control vcf: ' controlvcf
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
     echo "Detecting " $numControls " controls"
     echo ""
 
-    ls ../input/*.vcf.gz ../input/*.vcf
+    ls  ../input/*.vcf
     read -e -p "Enter the name of the cases vcf: " casesvcf
     echo ""
 
+    #make sure it is .vcf
     read -e -p "Enter the name of the output file: " vcfInput
 
     ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
 
-    read -e -p "Enter the desired name of the processed vcf: "
+    #read -e -p "Enter the desired name of the processed vcf: "
 
     read -e -p "Choose filename for output plink files (no extension): " plinkOutput
     echo ""
 
+
+    #Add list of kernels for user to see.
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
 
   #Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-      read -p "Choose SKAT or SKAT-O: " choice
-      if [ "$choice" == "SKAT-O" ]; then
+
+      read -p "Choose SKAT ( 1 ) or SKAT-O ( 2 ): " choice
+
+      if [ "$choice" == 2 ]; then
         method = "optimal.adj"
       else
         method = "davies"
       fi
+
+    #Default to davies if the kernel can't do SKAT-O.
+
     else
       method = "davies"
     fi
