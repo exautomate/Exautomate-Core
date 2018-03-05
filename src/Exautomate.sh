@@ -12,19 +12,19 @@ while [ $choice -ne 5 ]; do
   if [ $choice -eq 1 ]; then
 
     ls ../input/*.vcf
-    read -p -e "Enter the vcf file you would like to analyze: " vcfInput
+    read -e -p "Enter the vcf file you would like to analyze: " vcfInput
     echo ""
 
     #If there are comments (eg lines starting with #) mid-vcf file then this command is invalid. However, there should not be.
     headerLines=$(grep -o '#' $vcfInput | wc -l)
 
-    read -p -e "Enter the number of controls in your vcf file. Script assumes vcf is all controls, then all cases: " numControls
+    read -e -p "Enter the number of controls in your vcf file. Script assumes vcf is all controls, then all cases: " numControls
     echo ""
 
-    read -p -e "Choose filename for processed vcf (include .vcf): " vcfOutput
+    read -e -p "Choose filename for processed vcf (include .vcf): " vcfOutput
     echo ""
 
-    read -p -e "Choose filename for output plink files (no extension): " plinkOutput
+    read -e -p "Choose filename for output plink files (no extension): " plinkOutput
     echo ""
 
   echo "Kernels: linear, linear.weighted, quadratic, IBS, 2wayIX"
@@ -48,26 +48,26 @@ while [ $choice -ne 5 ]; do
 
   elif [ $choice -eq 2 ]; then
 
-    ls ../input/*.vcf
-    read -p -e "Enter the name of the control vcf: " controlvcf
+    ls ../input/*.vcf.gz ../input/*.vcf
+    read -e -p 'Enter the name of the control vcf: ' controlvcf
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
     echo "Detecting " $numControls " controls"
     echo ""
 
-    ls ../input/*.vcf
-    read -p -e "Enter the name of the cases vcf: " casesvcf
+    ls ../input/*.vcf.gz ../input/*.vcf
+    read -e -p "Enter the name of the cases vcf: " casesvcf
     echo ""
 
-    read -p -e "Enter the name of the output file: " vcfInput
+    read -e -p "Enter the name of the output file: " vcfInput
 
     ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
 
-    read -p -e "Enter the desired name of the processed vcf: "
+    read -e -p "Enter the desired name of the processed vcf: "
 
-    read -p -e "Choose filename for output plink files (no extension): " plinkOutput
+    read -e -p "Choose filename for output plink files (no extension): " plinkOutput
     echo ""
 
-    read -p -e "Enter the kernel to be used in the analysis: " kernel
+    read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
 
   #Handles the choice of methods that are available for different kernels.
@@ -119,7 +119,7 @@ while [ $choice -ne 5 ]; do
 
     ls *.bed
     ls ../dependencies/*.bed
-    read -p -e "Enter the name of the .bed file to filter by: " bedFile
+    read -e -p "Enter the name of the .bed file to filter by: " bedFile
 
 #Not sure this works with current tabix.
     tabix -T $bedFile merged1000gvcf.gz
