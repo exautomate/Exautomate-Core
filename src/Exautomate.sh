@@ -43,7 +43,7 @@ while [ $choice -ne 5 ]; do
     method = "davies"
   fi
 
-  ./ExautomateBackEnd ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd.sh ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
     #make a file called kernellist.txt with all valid kernel names.
 
   elif [ $choice -eq 2 ]; then
