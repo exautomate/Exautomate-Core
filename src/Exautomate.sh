@@ -91,7 +91,7 @@ while [ $choice -ne 5 ]; do
     fi
 
 
-  ./ExautomateBackEnd ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd.sh ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 
 
