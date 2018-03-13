@@ -24,3 +24,8 @@ output/test
 src/=
 *.7z
 src/1000gvcf/hs_err_pid1164.log
+src/march13th2018_option1_test.adj.fam
+src/march13th2018_option1_test.vcf.2
+src/march13th2018_option1_test.log
+src/march13th2018_option1_test.vcf.noMissXY.log
+src/march13th2018_option1_test.vcf.SetID

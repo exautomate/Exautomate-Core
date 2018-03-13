@@ -19,7 +19,7 @@ echo "Finished counting controls - " $numControls
 
 #Use Jacqueline's merging script here.
 ##PUT IN DEPENDENCIES ##
-java -jar GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o $3 -restrictAllelesTo BIALLELIC -selectType SNP
+java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o $3 -restrictAllelesTo BIALLELIC -selectType SNP
 bgzip -c $3 > $3.gz
 #rm $2.biAllelic.vcf
 vcftools --gzvcf $3.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > $3.2.gz
