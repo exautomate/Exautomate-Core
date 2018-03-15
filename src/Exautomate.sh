@@ -14,7 +14,7 @@
 ###############################################################################################
 
 ##### Input Parameters / Requirements #########################################################
-#   R (plus packages), Java, GATK, Plink, Vcftools, Annovar.
+#   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR
 ###############################################################################################
 
 clear
@@ -52,8 +52,8 @@ while [ $choice -ne 5 ]; do
 
   #Handles the choice of methods that are available for different kernels.
   if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-    read -p "Choose SKAT ( 1 ) or SKAT-O ( 2 ): " choice
-    if [ "$choice" == 2 ]; then
+    read -p "Choose SKAT or SKAT-O: " choice
+    if [ "$choice" == "SKAT-O" ]; then
       method = "optimal.adj"
     else
       method = "davies"
@@ -92,8 +92,8 @@ while [ $choice -ne 5 ]; do
 
     #Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-      read -p "Choose SKAT ( 1 ) or SKAT-O ( 2 ): " choice
-      if [ "$choice" == 2 ]; then
+      read -p "Choose SKAT or SKAT-O: " choice
+      if [ "$choice" == "SKAT-O" ]; then
         method = "optimal.adj"
       else
         method = "davies"
@@ -170,8 +170,8 @@ while [ $choice -ne 5 ]; do
 
     #Handles the choice of methods that are available for different kernels.
       if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-        read -p "Choose SKAT ( 1 ) or SKAT-O ( 2 ): " choice
-        if [ "$choice" == 2 ]; then
+        read -p "Choose SKAT or SKAT-O: " choice
+        if [ "$choice" == "SKAT-O" ]; then
           method = "optimal.adj"
         else
           method = "davies"

@@ -1,12 +1,28 @@
 #!/bin/bash
-echo ""
-echo "---- [merge_vcfsSKAT] SCRIPT STARTING ----"
-echo ""
 
-# Script to merge multiple .VCF files for the Robarts / Computer Science collaboration.
-# Requires all .VCF files to be meged together to exist in a folder with nothing else but the ./merge_vcfsSKAT.sh file.
+##### Author Info ############################################################################
+#     Jacqueline Dron
+#     University of Western Ontario, London, Ontario, Canada
+#     2018
+##############################################################################################
 
-# bgzip each .VCF file
+##### Description #############################################################################
+#    merge_vcfsSKAT
+#    Script that merges multiple .vcf files together.
+###############################################################################################
+
+##### Input Parameters / Requirements #########################################################
+#  	vcftools, tabix, bgzip
+#
+#		Requires all .vcf files to be meged together to exist in a folder with nothing else but
+#		the ./merge_vcfsSKAT.sh file.
+#
+#		$1 is merged .VCF file without extension.
+#   $2 is # of header lines in .VCF file to be ignored.
+#   $3 is name for merged output .VCF file.
+###############################################################################################
+
+#bgzip each .VCF file
 echo "-- bgzip starting --"
 echo ""
 
@@ -22,7 +38,7 @@ for i in ${all_vcfs[@]}
 echo "-- bgzip finished --"
 echo ""
 
-# indexing the zipped .VCF files
+#Indexing the zipped .VCF files
 echo "-- index starting --"
 echo ""
 ls *.vcf.gz > all_gz_vcfs.txt
@@ -33,12 +49,10 @@ for i in ${all_gz_vcfs[@]}
     do tabix -p vcf $i
     done
 
-echo "Indexed ${#all_gz_vcfs[*]} zipped .VCFs"
-echo ""
 echo "-- index finished --"
 echo ""
 
-# merge .VCF files using vcftools
+#Merge .vcf files using vcftools
 echo "-- vcftools merge starting --"
 echo ""
 echo "Merging ${#all_gz_vcfs[*]} zipped .VCFs into one .VCF"
@@ -57,7 +71,7 @@ rm -f all_gz_vcfs.txt
 echo "-- vcftools merge finished --"
 echo ""
 
-# Clean up the files that are not needed
+#Clean up the files that are not needed
 echo "-- file clean-up starting --"
 echo ""
 
@@ -69,9 +83,6 @@ rm -f *.map
 rm -f *.ped
 
 echo "-- file clean-up finished --"
-echo ""
-
-echo "---- [merge_vcfsSKAT] SCRIPT FINISHED ----"
 echo ""
 
 exit;

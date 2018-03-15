@@ -1,13 +1,25 @@
 #!/bin/bash
-# $1 - First VCF file to be merged
-# $2 - Second VCF file to be merged
-# $3 - Path to HG 19 FASTA file.
-# $4 - Output vcf file name.
 
-#Author: Jacqueline Dron and Brent Davis
-#Merges two vcf files together and then runs a validate on them.
-#Does not deal with the dos vs unix file formating problems we've encountered before. To be added?
+##### Author Info ############################################################################
+#     Brent Davis and Jacqueline Dron
+#     University of Western Ontario, London, Ontario, Canada
+#     2018
+##############################################################################################
+
+##### Description #############################################################################
+#    MergeVCFs
+#    Merges two .vcf files together and then runs a validate on them.
+###############################################################################################
+
+##### Input Parameters / Requirements #########################################################
+#   Java
+#
+#   $1 is the first.vcf file to be merged
+#   $2 is the second .vcf file to be merged
+#   $3 is the path to hg19.fasta file
+#   $4 is the output .vcf file name (include extension)
+###############################################################################################
 
 java -jar ../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R $3 -V $1 -V $2 -o $4 -genotypeMergeOptions UNIQUIFY -env
-##TEST
+### ADD: dos2unix $4 ###
 java -jar ../dependencies/GenomeAnalysisTK.jar -T ValidateVariants -R $3 -V $4 --validationTypeToExclude ALL

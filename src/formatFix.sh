@@ -1,14 +1,23 @@
 #!/bin/bash
-echo ""
-echo "---- [formatFix] SCRIPT STARTING ----"
-echo ""
 
-# Script to fix the format of merged .VCF the Robarts / Computer Science collaboration.
-# $1 is merged .VCF file without extension.
-# $2 is # of header lines in .VCF file to be ignored.
-# $3 is name for merged output .VCF file.
+##### Author Info ############################################################################
+#     Brent Davis
+#     University of Western Ontario, London, Ontario, Canada
+#     2018
+##############################################################################################
 
-echo "Parameter input: File name ["$1"] | Number of header lines in .VCF ["$2"] | Output .VCF name ["$3"]"
+##### Description #############################################################################
+#    formatFix
+#    Fixes format inconsistancies in .vcf file that arise through the merging process.
+###############################################################################################
+
+##### Input Parameters / Requirements #########################################################
+#   $1 is merged .VCF file without extension.
+#   $2 is # of header lines in .VCF file to be ignored.
+#   $3 is name for merged output .VCF file.
+###############################################################################################
+
+echo "Parameter input: File name ["$1"] | Number of header lines in .vcf ["$2"] | Output .vcf name ["$3"]"
 echo ""
 
 file_name=$1
@@ -31,6 +40,3 @@ sed -i 's/:\.:\./\t0\|0/g' $B
 cat $T $B > $3
 rm $T
 rm $B
-echo ""
-echo "---- [formatFix] SCRIPT FINISHED ----"
-echo ""
