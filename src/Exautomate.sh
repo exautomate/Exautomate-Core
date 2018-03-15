@@ -1,7 +1,22 @@
 #!/bin/bash
-###### Authors: Brent Davis and Jacqueline Dron
-###### Exautomate: Bash script based utility to speed up exome analysis.
-###### Requirements: R (plus packages), Java, GATK, Plink, Vcftools, Annovar.
+
+##### Author Info ############################################################################
+#     Brent Davis and Jacqueline Dron
+#     University of Western Ontario, London, Ontario, Canada
+#     2018
+##############################################################################################
+
+##### Description #############################################################################
+#    Exautomate
+#    Bash script based utility to speed up exome analysis.
+#    May be used for other datasets (ie. targeted or genome); however, optimization was downloaded
+#    using exome data.
+###############################################################################################
+
+##### Input Parameters / Requirements #########################################################
+#   R (plus packages), Java, GATK, Plink, Vcftools, Annovar.
+###############################################################################################
+
 clear
 echo "Welcome to Ex-Automate."
 choice=0

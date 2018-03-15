@@ -24,12 +24,13 @@ B=bottom_$1
 
 ls -l  $B
 
-sed -i 's/\.\/\./0\|0/g' $B 
+sed -i 's/\.\/\./0\|0/g' $B
 sed -i 's/\.:\.:\./0\|0/g' $B
 sed -i 's/\t0:\.:\./\t0\|0/g' $B
-sed -i 's/:\.:\./\t0\|0/g' $B 
+sed -i 's/:\.:\./\t0\|0/g' $B
 cat $T $B > $3
 rm $T
 rm $B
+echo ""
 echo "---- [formatFix] SCRIPT FINISHED ----"
 echo ""
