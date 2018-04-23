@@ -3,7 +3,7 @@ VCFtools - v0.1.12a
 (C) Adam Auton and Anthony Marcketta 2009
 
 Parameters as interpreted:
-	--gzvcf march13th2018_option1_test.vcf.noMiss.vcf.gz
+	--gzvcf ../output/20180423_lowVShighHDLexome_option1a.noMiss.vcf.gz
 	--not-chr X
 	--not-chr Y
 	--recode

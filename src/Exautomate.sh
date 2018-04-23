@@ -39,7 +39,7 @@ while [ $choice -ne 5 ]; do
     read -e -p "Enter the number of controls in your .vcf file (script assumes .vcf has all the controls lumped together first, then all cases): " numControls
     echo ""
 
-    read -e -p "Choose filename for the processed .vcf file (include extension): " vcfOutput
+    read -e -p "Choose filename for the processed .vcf file (no extension): " vcfOutput
     echo ""
 
     read -e -p "Choose filename for the output PLINK files (no extension): " plinkOutput
@@ -62,7 +62,7 @@ while [ $choice -ne 5 ]; do
     method = "davies"
   fi
 
-  ./ExautomateBackEnd.sh ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 2 ##########
   #The user has two merged .vcf files (one case, one control) they want to work with.
@@ -104,7 +104,7 @@ while [ $choice -ne 5 ]; do
       method = "davies"
     fi
 
-  ./ExautomateBackEnd.sh ../dependencies/hg_19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 3 ##########
   #The user needs the 1000 Genomes data. This option does not perform SKAT.

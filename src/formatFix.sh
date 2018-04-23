@@ -32,7 +32,6 @@ T=top_$1
 B=bottom_$1
 
 ls -l  $B
-
 sed -i 's/\.\/\./0\|0/g' $B
 sed -i 's/\.:\.:\./0\|0/g' $B
 sed -i 's/\t0:\.:\./\t0\|0/g' $B
