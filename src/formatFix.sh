@@ -25,11 +25,11 @@ N=$(wc -l < $file_name)
 #echo $N
 L=$(($N-$2))
 #echo $L "L is that"
-head -n $2 $1 > top_$1
+head -n $2 $1 > $1_top
 #echo "Top " $2 "lines extracted"
-tail -n $L $1 > bottom_$1
-T=top_$1
-B=bottom_$1
+tail -n $L $1 > $1_bottom
+T=$1_top
+B=$1_bottom
 
 ls -l  $B
 sed -i 's/\.\/\./0\|0/g' $B

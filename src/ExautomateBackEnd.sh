@@ -32,7 +32,7 @@ echo ""
 ########## PREPARING .VCF FILE FOR SKAT/SKAT-O ANALYSIS ##########
 ### TO DO: Use Jacqueline's merging script here. ###
 ### TO DO: Direct bgzip and vcftools to the dependencies folder ###
-java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
+yjava -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
 bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 #rm $2.biAllelic.vcf
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
@@ -72,6 +72,7 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 #rm $3.noMissXY
 
 #Updating the .fam file with phenotype status, necessary for SKAT
+################################# this needs fixing i think
 awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
 
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
@@ -82,7 +83,7 @@ awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ..
 ./table_annovar.pl ../output/$3.noMissXY.vcf.gz humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
 
 #Calling conversion script.
-./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
+./AnnovarToSetID.sh ../output/$3.noMissXY.anno ../output/$3
 
 echo "File preparation for " $8 " analysis complete. Results are in " $5 " and the processed, final .vcf file is " ../output/$3.noMissXY.vcf.gz
 echo ""

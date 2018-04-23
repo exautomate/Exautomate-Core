@@ -36,3 +36,8 @@ output/20180423_lowVShighHDLexome_option1a.SetID
 output/20180423_lowVShighHDLexome_option1a.adj.fam
 output/20180423_lowVShighHDLexome_option1a.log
 output/20180423_lowVShighHDLexome_option1a.noMissXY.log
+output/20180423_lowVShighHDLexome_option1a.bim
+output/20180423_lowVShighHDLexome_option1a.fam
+output/20180423_lowVShighHDLexome_option1a.noMissXY.map
+output/20180423_lowVShighHDLexome_option1a.noMissXY.ped
+output/20180423_lowVShighHDLexome_option1a.nosex
