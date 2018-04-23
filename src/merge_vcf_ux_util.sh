@@ -17,26 +17,38 @@
 #		Requires all .vcf.gz files to be in the input/merge/ folder (/src/-> ../input/merge/folder)
 ###############################################################################################
 
-ls -l -s -h ../input/merge/*.vcf.*
+#dos2unix *.vcf
+ls -l -s -h ../input/merge/*.vcf
 echo "---- Divisor ----"
-echo "These are the vcfs to be merged. Please enter the name of any to be moved to the temporary holding folder."
+echo "These are the .vcf files to be merged."
 echo "---- Divisor ----"
 
 ###Make a branch for 1) Rename, 2)
 
 
 choice="empty"
-echo "Enter the filenames to be removed, one at a time followed by enter/return, or type 'done' to continue"
+echo "Please enter the name of any to be moved to the temporary holding folder."
+echo "Enter the filenames one-at-a-time to be removed, followed by enter/return. Type 'done' to continue."
 
 cd ../input/merge/
 mkdir movedfiles
 while [ "$choice" != "done" ];
 do
 
- read -e -p "Choose a filename " choice;
+ read -e -p "Choose files to be move: " choice;
  mv $choice ./movedfiles/
 
 done
+
+echo "--- Running bgzip ---"
+echo ""
+for i in *.vcf
+do
+  bgzip -c $i > $i.gz
+done
+echo "--- Completed bgzip ---"
+echo ""
+
 
   echo "--- Running Tabix ---"
   echo ""
@@ -51,30 +63,30 @@ done
   echo ""
   #Using --pad-missing [ . in place of missing columns ] and -s to allow small overlaps in files.
   #vcf-concat -p -s *.vcf.gz | bgzip -c > merged.vcf.gz
-  #vcf-merge -R "0|0" *.vcf.gz | bgzip -c > merged.vcf.gz
+  vcf-merge -R "0|0" *.vcf.gz | bgzip -c > merged.vcf.gz
 
  #java -Xmx16g -jar ../../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R ../../dependencies/hg19.fasta -V 1116E.clc.vcf.gz -V 1188E.clc.vcf.gz -o iteration1.vcf.gz -genotypeMergeOptions UNIQUIFY -env
 
-count=1
-for i in *.vcf.gz
-do
-
-  if [ $count -eq 1 ]
-  then
-    tmpfile=$i
-  elif [$count -eq 2 ]
-  then
-    java -Xmx16g -jar ../../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R ../../dependencies/hg19.fasta -V $tmpfile -V $i -o $count.vcf.gz -genotypeMergeOptions UNIQUIFY -env
-  else
-  then
-    subcount=$((count-1));
-    java -Xmx16g -jar ../../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R ../../dependencies/hg19.fasta -V $subcount.vcf.gz -V $i -o $count.vcf.gz -genotypeMergeOptions UNIQUIFY -env
-
-  fi
-
-  count=$((count+1));
-
-done
+#count=1
+#for i in *.vcf.gz
+# do
+#
+#   if [ $count -eq 1 ]
+#   then
+#     tmpfile=$i
+#   elif [$count -eq 2 ]
+#   then
+#     java -Xmx16g -jar ../../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R ../../dependencies/hg19.fasta -V $tmpfile -V $i -o $count.vcf.gz -genotypeMergeOptions UNIQUIFY -env
+#   else
+#   then
+#     subcount=$((count-1));
+#     java -Xmx16g -jar ../../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R ../../dependencies/hg19.fasta -V $subcount.vcf.gz -V $i -o $count.vcf.gz -genotypeMergeOptions UNIQUIFY -env
+#
+#   fi
+#
+#   count=$((count+1));
+#
+# done
 
 
 
