@@ -30,9 +30,9 @@ numControls=$7
 echo "Finished counting controls = " $numControls
 echo ""
 ########## PREPARING .VCF FILE FOR SKAT/SKAT-O ANALYSIS ##########
-### TO DO: Use Jacqueline's merging script here. ###
-### TO DO: Direct bgzip and vcftools to the dependencies folder ###
-yjava -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
+### TODO: Use Jacqueline's merging script here. ###
+### TODO: Direct bgzip and vcftools to the dependencies folder ###
+java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
 bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 #rm $2.biAllelic.vcf
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
@@ -53,7 +53,7 @@ echo ""
 echo "formatFix.sh finished"
 echo ""
 
-### TO DO: Add something to do an automatic overwrite ###
+### TODO: Add something TODO an automatic overwrite ###
 bgzip -c ../output/$3.formatFix.vcf > ../output/$3.formatFix.vcf.gz
 
 #Clean up .vcf . If needed again unzip the $3 with gunzip
@@ -68,19 +68,22 @@ vcftools --gzvcf ../output/$3.noMiss.vcf.gz --not-chr X --not-chr Y --recode --s
 ########## GENERATING PLINK FILES FOR SKAT/SKAT-O ANALYSIS ##########
 vcftools --gzvcf ../output/$3.noMissXY.vcf.gz --plink --out ../output/$3.noMissXY
 #rm $3.noMiss.vcf.gz
+### TODO:
 plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 #rm $3.noMissXY
 
 #Updating the .fam file with phenotype status, necessary for SKAT
 ################################# this needs fixing i think
-awk '{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
+### TODO: Make this run with this - https://stackoverflow.com/questions/47230019/awk-compare-columns-from-two-files-and-replace-text-in-first-file
+### TODO: Figure out whether to take list of controls and cases or to auto detect.
+awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
 
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
 #Requires ANNOVAR perl scripts in the local folder
-### TO DO: maybe automate to take the file location ###
-### TO DO: UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER ###
+### TODO: maybe automate to take the file location ###
+### TODO: UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER ###
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
-./table_annovar.pl ../output/$3.noMissXY.vcf.gz humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
+../dependencies/table_annovar.pl ../output/$3.noMissXY.vcf.gz humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
 
 #Calling conversion script.
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno ../output/$3
@@ -90,7 +93,7 @@ echo ""
 
 ########## SKAT/SKAT-O ANALYSIS ##########
 echo "Beginning SKAT/SKAT-O analysis with the following files and parameters: "
-### TO DO: maybe make a list of the things so the user can see? ###
+### TODO: maybe make a list of the things so the user can see? ###
 echo ""
 Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.SetID "SSD_File.SSD" $6 $8
 

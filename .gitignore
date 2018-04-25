@@ -2,6 +2,7 @@
 *.tbi
 *.gz
 /dependencies/*/
+/dependencies/*
 *.zip
 *.bz2
 dependencies/agilent.bed

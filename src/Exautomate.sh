@@ -54,12 +54,12 @@ while [ $choice -ne 5 ]; do
   if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
     read -p "Choose SKAT or SKAT-O: " choice
     if [ "$choice" == "SKAT-O" ]; then
-      method = "optimal.adj"
+      method="optimal.adj"
     else
-      method = "davies"
+      method="davies"
     fi
   else
-    method = "davies"
+    method="davies"
   fi
 
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
@@ -94,14 +94,14 @@ while [ $choice -ne 5 ]; do
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
       read -p "Choose SKAT or SKAT-O: " choice
       if [ "$choice" == "SKAT-O" ]; then
-        method = "optimal.adj"
+        method="optimal.adj"
       else
-        method = "davies"
+        method="davies"
       fi
 
     #Default to davies if the kernel can't do SKAT-O.
     else
-      method = "davies"
+      method="davies"
     fi
 
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
@@ -172,12 +172,12 @@ while [ $choice -ne 5 ]; do
       if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
         read -p "Choose SKAT or SKAT-O: " choice
         if [ "$choice" == "SKAT-O" ]; then
-          method = "optimal.adj"
+          method="optimal.adj"
         else
-          method = "davies"
+          method="davies"
         fi
       else
-        method = "davies"
+        method="davies"
       fi
 
       read -p "Choose filename for the output PLINK files (no extension): " outputName
