@@ -73,10 +73,12 @@ while [ $choice -ne 5 ]; do
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
     echo "Detecting " $numControls " controls"
     echo ""
+    cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > controllist.txt
 
     ls  ../input/*.vcf
     read -e -p "Enter the name of the case .vcf file (include extension): " casesvcf
     echo ""
+    cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > caselist.txt
 
     read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfInput
 

@@ -29,6 +29,11 @@
 numControls=$7
 echo "Finished counting controls = " $numControls
 echo ""
+
+#Takes a .vcf.gz file, unzips it, searches for the '#CHROM' line in the vcf, takes the file and converts the rows (sample ids) to a line by line file
+#and removes the non-sample ids.
+bgzip -c $2 | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > samplelist.txt
+
 ########## PREPARING .VCF FILE FOR SKAT/SKAT-O ANALYSIS ##########
 ### TODO: Use Jacqueline's merging script here. ###
 ### TODO: Direct bgzip and vcftools to the dependencies folder ###
@@ -38,17 +43,16 @@ bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
 #rm $2.biAllelic.vcf.gz
 
-### QUESTION: Is the message below necessary? ###
-echo "Finished GATK usage"
-
 #Unzipping file to prepare for formatFix.sh
 bgzip -d ../output/$3.biallelic.2.vcf.gz
 
 #formatFix.sh is to fix the formatting inconsistancies that were generated from the merging steps for the .vcf files
 ### QUESTION: can the input be a gzvcf file? if not, then we need to add in a step to unzip the file. ###
 ### NOTE: We can put the unzipping in there if we need to. ###
-echo "Calling formatFix.sh"
+### NOTE: Yes. Will try to push an update version.
+echo "----- Invoking formatFix.sh ------"
 echo ""
+# INVOKE FILE-1 FILE-2 INVOCATION ONLY
 ./formatFix.sh ../output/$3.biallelic.2.vcf $4 ../output/$3.formatFix.vcf
 echo "formatFix.sh finished"
 echo ""
@@ -76,7 +80,11 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 ################################# this needs fixing i think
 ### TODO: Make this run with this - https://stackoverflow.com/questions/47230019/awk-compare-columns-from-two-files-and-replace-text-in-first-file
 ### TODO: Figure out whether to take list of controls and cases or to auto detect.
-awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
+## NOTE: ../input/controlNames.txt needs to be a file of one control name per line. It will match column 6 of the .fam file
+## NOTE: If the vcf file format changes how it labels its row headers in the vcf, this will need to be updated.
+awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
+awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
+#awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
 
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
 #Requires ANNOVAR perl scripts in the local folder
