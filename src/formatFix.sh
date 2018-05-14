@@ -17,21 +17,19 @@
 #   $3 is name for merged output .VCF file.
 ###############################################################################################
 
+### TODO: Alter output to make it consistent with other scripts
 echo "Parameter input: File name ["$1"] | Number of header lines in .vcf ["$2"] | Output .vcf name ["$3"]"
 echo ""
 
 file_name=$1
 N=$(wc -l < $file_name)
-#echo $N
 L=$(($N-$2))
-#echo $L "L is that"
 head -n $2 $1 > $1_top
-#echo "Top " $2 "lines extracted"
 tail -n $L $1 > $1_bottom
 T=$1_top
 B=$1_bottom
 
-ls -l  $B
+ls -l  $B   ### QUESTION: do we need this line?
 sed -i 's/\.\/\./0\|0/g' $B
 sed -i 's/\.:\.:\./0\|0/g' $B
 sed -i 's/\t0:\.:\./\t0\|0/g' $B

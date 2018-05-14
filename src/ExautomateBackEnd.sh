@@ -91,10 +91,10 @@ awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt
 ### TODO: maybe automate to take the file location ###
 ### TODO: UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER ###
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
-../dependencies/table_annovar.pl ../output/$3.noMissXY.vcf.gz humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
+../dependencies/table_annovar.pl ../output/$3.noMissXY.vcf ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
 
 #Calling conversion script.
-./AnnovarToSetID.sh ../output/$3.noMissXY.anno ../output/$3
+./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
 
 echo "File preparation for " $8 " analysis complete. Results are in " $5 " and the processed, final .vcf file is " ../output/$3.noMissXY.vcf.gz
 echo ""
