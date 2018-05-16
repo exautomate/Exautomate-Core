@@ -80,7 +80,7 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 ################################# this needs fixing i think
 ### TODO: Make this run with this - https://stackoverflow.com/questions/47230019/awk-compare-columns-from-two-files-and-replace-text-in-first-file
 ### TODO: Figure out whether to take list of controls and cases or to auto detect.
-## NOTE: ../input/controlNames.txt needs to be a file of one control name per line. It will match column 6 of the .fam file
+## NOTE: ../input/controllist.txt needs to be a file of one control name per line. It will match column 6 of the .fam file
 ## NOTE: If the vcf file format changes how it labels its row headers in the vcf, this will need to be updated.
 awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
 awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
@@ -91,7 +91,8 @@ awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt
 ### TODO: maybe automate to take the file location ###
 ### TODO: UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER ###
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
-../dependencies/table_annovar.pl ../output/$3.noMissXY.vcf ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring . -vcfinput
+bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
+../dependencies/annovar/table_annovar.pl ../output/$3.noMissXY.vcf ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
 
 #Calling conversion script.
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
