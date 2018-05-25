@@ -31,6 +31,8 @@ SSD_INFO_FILE <- Open_SSD(args[5],SSD.Info)
 
 #Output type should be changed depending on whether dichotomous or continous output type.
 obj <- SKAT_Null_Model(y~1,out_type="D")
+
+#IMPORTANT: args[6] input didn't have "" around it... will it work in the script?
 out <- SKAT.SSD.All(SSD_INFO_FILE,obj,kernel=args[6],method="optimal.adj")
 
 ##Add QQplot SSD.Binary.

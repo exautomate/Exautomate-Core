@@ -92,7 +92,8 @@ awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt
 ### TODO: UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER ###
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
 bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
-../dependencies/annovar/table_annovar.pl ../output/$3.noMissXY.vcf ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
+../dependencies/annovar/convert2annovar.pl -format vcf4 $3.noMissXY.vcf > ../output/tmp.avinput
+../dependencies/annovar/table_annovar.pl ../output/tmp.avinput ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
 
 #Calling conversion script.
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
