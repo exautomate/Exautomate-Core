@@ -27,6 +27,7 @@ Generate_SSD_SetID(args[1],args[2],args[3],args[4],args[5],SSD.Info)
 FAM <- Read_Plink_FAM(c(args[3]))
 y <- FAM$Phenotype
 
+
 SSD_INFO_FILE <- Open_SSD(args[5],SSD.Info)
 
 #Output type should be changed depending on whether dichotomous or continous output type.
@@ -37,14 +38,18 @@ out <- SKAT.SSD.All(SSD_INFO_FILE,obj,kernel=args[6],method="optimal.adj")
 
 ##Add QQplot SSD.Binary.
 
-##Add bonferoni correction to the p values here.##
-outAdj <- p.adjust(out$results$P.value,method="holm")
+outAdj <- out
 
-write.table(outAdj$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
+##Add bonferoni correction to the p values here.##
+outAdj$results$P.value <- p.adjust(out$results$P.value,method="holm")
+write.table(out$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
+write.table(outAdj$results, file="./SKAT+ADJ+output.results.txt", col.names=TRUE, row.names=FALSE)
+
+ggplot(melt(out$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
+ggsave("SKAT-KERNELDENSITYPLOT-OUTPUT.pdf")
 
 ggplot(melt(outAdj$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
-
-ggsave("ExomeRunOutput.pdf")
+ggsave("SKAT-KERNELDENSITYPLOT-HOLMADJUSTED-OUTPUT.pdf")
 
 #save workspace
 save(list=ls(all.names=TRUE),file="SKATResults.RData",envir= .GlobalEnv);
