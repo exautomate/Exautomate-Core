@@ -82,9 +82,10 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 ### TODO: Figure out whether to take list of controls and cases or to auto detect.
 ## NOTE: ../input/controllist.txt needs to be a file of one control name per line. It will match column 6 of the .fam file
 ## NOTE: If the vcf file format changes how it labels its row headers in the vcf, this will need to be updated.
-awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
-awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
+#awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
+#awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
 #awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
+read -e -p "Stop and edit the fam file before hitting continue:" value
 
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
 #Requires ANNOVAR perl scripts in the local folder
