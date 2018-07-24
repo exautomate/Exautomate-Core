@@ -42,14 +42,14 @@ outAdj <- out
 
 ##Add bonferoni correction to the p values here.##
 outAdj$results$P.value <- p.adjust(out$results$P.value,method="holm")
-write.table(out$results, file="./SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
-write.table(outAdj$results, file="./SKAT+ADJ+output.results.txt", col.names=TRUE, row.names=FALSE)
+write.table(out$results, file="../output/SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
+write.table(outAdj$results, file="../output/SKAT+ADJ+output.results.txt", col.names=TRUE, row.names=FALSE)
 
 ggplot(melt(out$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
-ggsave("SKAT-KERNELDENSITYPLOT-OUTPUT.pdf")
+ggsave("../output/SKAT-KERNELDENSITYPLOT-OUTPUT.pdf")
 
 ggplot(melt(outAdj$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
-ggsave("SKAT-KERNELDENSITYPLOT-HOLMADJUSTED-OUTPUT.pdf")
+ggsave("../output/SKAT-KERNELDENSITYPLOT-HOLMADJUSTED-OUTPUT.pdf")
 
 #save workspace
-save(list=ls(all.names=TRUE),file="SKATResults.RData",envir= .GlobalEnv);
+save(list=ls(all.names=TRUE),file="../output/SKATResults.RData",envir= .GlobalEnv);
