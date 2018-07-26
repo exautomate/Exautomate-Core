@@ -85,7 +85,11 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 #awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
 #awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
 #awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
-read -e -p "Stop and edit the fam file before hitting continue:" value
+placeholder="y"
+choice="n"
+while [ $choice != $placeholder ]; do
+  read -e -p "Stop and edit the fam file. Finished? (y/n):" choice
+done
 
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
 #Requires ANNOVAR perl scripts in the local folder
