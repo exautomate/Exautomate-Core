@@ -85,11 +85,14 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 #awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
 #awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
 #awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
+<<<<<<< HEAD
 placeholder="y"
 choice="n"
 while [ $choice != $placeholder ]; do
   read -e -p "Stop and edit the fam file. Finished? (y/n):" choice
 done
+=======
+read -e -p "Stop and edit the fam file before hitting continue (must be the same name as what was entered at the beginning + .adj.fam):" value
 
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
 #Requires ANNOVAR perl scripts in the local folder
@@ -98,6 +101,7 @@ done
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
 bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 ../dependencies/annovar/convert2annovar.pl -format vcf4 $3.noMissXY.vcf > ../output/tmp.avinput
+../dependencies/annovar/convert2annovar.pl -format vcf4 ../output/$3.noMissXY.vcf > ../output/tmp.avinput
 ../dependencies/annovar/table_annovar.pl ../output/tmp.avinput ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
 
 #Calling conversion script.
