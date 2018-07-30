@@ -113,11 +113,30 @@ while [ $choice -ne 5 ]; do
   #Fragile. If the location of the 1000 Genome files are moved, then this will fail.
   elif [ $choice -eq 3 ]; then
 
-  ## TODO: option for people to select certain ethnicities to dl?
+    ls *.bed
+    ls ../dependencies/*.bed
+    read -e -p "Enter the name of the .bed file to filter by: " bedFile
 
-        ls *.bed
-        ls ../dependencies/*.bed
-        read -e -p "Enter the name of the .bed file to filter by: " bedFile
+##JD trying ethnicity stuff
+
+## TODO: include a list of the ethnicities and their codes in the src folder.
+ethnicity=0
+printf "Please select which population group(3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes data: \n
+ EUR (includes: CEU, FIN, GBR, IBS, TSI) \n
+ EAS (includes: CDX, CHB, CHS, JPT, KHV) \n
+ AMR (includes: CLM, MXL, PEL, PUR) \n
+ SAS (includes: BEB, GIH, ITU, PJL, STU) \n
+ AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI) \n
+ CUSTOM (user-specified file, must be named "custom.txt") \n
+
+"
+
+
+
+read -p "Enter (1-4): " $ethnicity
+
+##
+
 
     mkdir ./1000gvcf
 
@@ -136,7 +155,7 @@ while [ $choice -ne 5 ]; do
     echo "Finished retrieval. Beginning concatenation."
 
     #Necessary for first time install. Exits quickly if already installed.
-    ##apt install vcftools <- put into Installer.sh
+    ## TODO: apt install vcftools <- put into Installer.sh
     vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
     echo "Finished concatenation. Sorting."
 
