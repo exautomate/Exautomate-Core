@@ -82,8 +82,6 @@ while [ $choice -ne 5 ]; do
 
     read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfInput
 
-    ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
-
     read -e -p "Choose filename for the output PLINK files (no extension): " plinkOutput
     echo ""
 
@@ -106,6 +104,7 @@ while [ $choice -ne 5 ]; do
       method="davies"
     fi
 
+  ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 3 ##########
@@ -113,6 +112,12 @@ while [ $choice -ne 5 ]; do
   #Requires wget and vcftools.
   #Fragile. If the location of the 1000 Genome files are moved, then this will fail.
   elif [ $choice -eq 3 ]; then
+
+  ## TODO: option for people to select certain ethnicities to dl?
+
+        ls *.bed
+        ls ../dependencies/*.bed
+        read -e -p "Enter the name of the .bed file to filter by: " bedFile
 
     mkdir ./1000gvcf
 
@@ -140,11 +145,7 @@ while [ $choice -ne 5 ]; do
     java -jar ../dependencies/picard.jar SortVcf I=./1000gvcf/merged1000g.vcf.gz O=../output/sorted1000g.vcf.gz TMP_DIR=../tmpdir/
     rm -r ../tmpdir
 
-    ls *.bed
-    ls ../dependencies/*.bed
-    read -e -p "Enter the name of the .bed file to filter by: " bedFile
-
-#Not sure this works with current tabix.
+    #Not sure this works with current tabix.
     tabix -T $bedFile merged1000gvcf.gz
 
     #Command to filter based on a list of names from the population files. Made in R.
@@ -165,6 +166,9 @@ while [ $choice -ne 5 ]; do
     read -p "Enter the filename of the .sim file to be used (include extension): " simInput
     echo ""
 
+    read -p "Choose filename for the output PLINK files (no extension): " outputName
+    echo ""
+
     ### TO DO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -p "Enter the kernel to be used in the analysis: " kernel
@@ -182,15 +186,12 @@ while [ $choice -ne 5 ]; do
         method="davies"
       fi
 
-      read -p "Choose filename for the output PLINK files (no extension): " outputName
-      echo ""
+    ./synthesizeSKATFiles.sh $simInput $outputName
 
-      ./synthesizeSKATFiles.sh $simInput $outputName
-
-      echo "Running SKAT"
-      Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel $method
-      echo "SKAT complete."
-      mv $outputName.* ../output/$outputName.*
+    echo "Running SKAT"
+    Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel $method
+    echo "SKAT complete."
+    mv $outputName.* ../output/$outputName.*
 
     else
       echo "Unknown input."
