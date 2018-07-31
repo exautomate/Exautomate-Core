@@ -2,12 +2,11 @@
 
 ### testing output log
 
-LOGFILE=../output/out.log
-
-"$(date "+%m%d%Y %T"): Start" >> $LOGFILE
-
+## for real directory: ../output/out.log
+LOGFILE=./out.log
 
 
+echo "$(date "+%m%d%Y %T"): Start" >> $LOGFILE
 
 
-"$(date "+%m%d%Y %T"): End" >> $LOGFILE
+echo "$(date "+%m%d%Y %T"): End" >> $LOGFILE
