@@ -209,12 +209,12 @@ while [ $choice -ne 5 ]; do
     rm -r ../tmpdir
 
     #Not sure this works with current tabix.
-    tabix -T $bedFile ./1000gvcf/merged1000g.vcf.gz
+    tabix -T $bedFile ../output/sorted1000g.vcf.gz
 
     ###################### JD trying ethnicity stuff...
     if [ "$ethnicity" != "ALL"];
     then
-        vcf-subset -e -c $ethnicity.txt ./1000gvcf/merged1000g.vcf.gz > ./1000gvcf/merged1000g-$ethnicity.vcf.gz
+        vcf-subset -e -c $ethnicity.txt ../output/sorted1000g.vcf.gz > ../output/sorted1000g-$ethnicity.vcf.gz
     fi
     ######################
 
