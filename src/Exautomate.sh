@@ -158,10 +158,13 @@ while [ $choice -ne 5 ]; do
   #Fragile. If the location of the 1000 Genome files are moved, then this will fail.
   elif [ $choice -eq 3 ];
   then
+    echo "####### OPTION 2: Merge case and control .vcf for analysis #######" >> $LOGFILE #out.log
+    echo "" >> $LOGFILE #out.log
 
     ls *.bed
     ls ../dependencies/*.bed
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
+    echo "Filtering .bed: $bedFile" >> $LOGFILE
 
     ###################### JD trying ethnicity stuff...
 
@@ -176,6 +179,8 @@ while [ $choice -ne 5 ]; do
      ALL (the entire 1000 Genomes dataset) \n"
 
     read -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " $ethnicity
+    echo "Ethnicities of interest: $ethnicity" >> $LOGFILE
+
     ######################
 
     mkdir ./1000gvcf
@@ -227,29 +232,38 @@ while [ $choice -ne 5 ]; do
 ########## OPTION 4 ##########
   #The user wants to generate a synthetic dataset for SKAT analysis.
   elif [ $choice -eq 4 ]; then
+    echo "####### OPTION 4: Synthetic run #######" >> $LOGFILE
+    echo "" >> $LOGFILE
 
     ls ../input/*.sim
     read -p "Enter the filename of the .sim file to be used (include extension): " simInput
     echo ""
+    echo "Input .sim: $simInput" >> $LOGFILE
 
     read -p "Choose filename for the output PLINK files (no extension): " outputName
     echo ""
+    echo "Output PLINK files: $plinkOutput" >> $LOGFILE #out.log
 
-    ### TO DO: make a file called kernellist.txt with all valid kernel names. ###
+    ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
+    echo "Kernal option: $kernel" >> $LOGFILE #out.log
 
     #Handles the choice of methods that are available for different kernels.
       if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
         read -p "Choose SKAT or SKAT-O: " choice
+        echo "Test: $choice" >> $LOGFILE #out.log
         if [ "$choice" == "SKAT-O" ]; then
           method="optimal.adj"
+          echo "Method: $method" >> $LOGFILE #out.log
         else
           method="davies"
+          echo "Method: $method" >> $LOGFILE #out.log
         fi
       else
         method="davies"
+        echo "Method: $method" >> $LOGFILE #out.log
       fi
 
     ./synthesizeSKATFiles.sh $simInput $outputName
