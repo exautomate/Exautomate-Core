@@ -27,8 +27,8 @@ while [ $choice -ne 5 ]; do
 
 ########## OPTION 1 ##########
   #The user already has a merged .vcf they want to work with.
-  if [ $choice -eq 1 ]; then
-
+  if [ $choice -eq 1 ];
+  then
     ls ../input/*.vcf
     read -e -p "Enter the .vcf file you would like to analyze (include extension): " vcfInput
     echo ""
@@ -50,23 +50,26 @@ while [ $choice -ne 5 ]; do
   read -p "Enter the kernel to be used in the analysis: " kernel
   echo ""
 
-  #Handles the choice of methods that are available for different kernels.
-  if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-    read -p "Choose SKAT or SKAT-O: " choice
-    if [ "$choice" == "SKAT-O" ]; then
-      method="optimal.adj"
+    #Handles the choice of methods that are available for different kernels.
+    if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
+    then
+      read -p "Choose SKAT or SKAT-O: " choice
+      if [ "$choice" == "SKAT-O" ];
+      then
+        method="optimal.adj"
+      else
+        method="davies"
+      fi
     else
       method="davies"
     fi
-  else
-    method="davies"
-  fi
 
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 2 ##########
   #The user has two merged .vcf files (one case, one control) they want to work with.
-  elif [ $choice -eq 2 ]; then
+  elif [ $choice -eq 2 ];
+  then
 
     ls  ../input/*.vcf
     read -e -p "Enter the name of the control .vcf file (include extension): " controlvcf
@@ -91,14 +94,15 @@ while [ $choice -ne 5 ]; do
     echo ""
 
     #Handles the choice of methods that are available for different kernels.
-    if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
+    if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
+    then
       read -p "Choose SKAT or SKAT-O: " choice
-      if [ "$choice" == "SKAT-O" ]; then
+      if [ "$choice" == "SKAT-O" ];
+      then
         method="optimal.adj"
       else
         method="davies"
       fi
-
     #Default to davies if the kernel can't do SKAT-O.
     else
       method="davies"
@@ -109,34 +113,29 @@ while [ $choice -ne 5 ]; do
 
 ########## OPTION 3 ##########
   #The user needs the 1000 Genomes data. This option does not perform SKAT.
-  #Requires wget and vcftools.
+  #Requires wget, vcftools, and tabix.
   #Fragile. If the location of the 1000 Genome files are moved, then this will fail.
-  elif [ $choice -eq 3 ]; then
+  elif [ $choice -eq 3 ];
+  then
 
     ls *.bed
     ls ../dependencies/*.bed
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
 
-##JD trying ethnicity stuff
+    ###################### JD trying ethnicity stuff...
 
-## TODO: include a list of the ethnicities and their codes in the src folder.
-ethnicity=0
-printf "Please select which population group(3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes data: \n
- EUR (includes: CEU, FIN, GBR, IBS, TSI) \n
- EAS (includes: CDX, CHB, CHS, JPT, KHV) \n
- AMR (includes: CLM, MXL, PEL, PUR) \n
- SAS (includes: BEB, GIH, ITU, PJL, STU) \n
- AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI) \n
- CUSTOM (user-specified file, must be named "custom.txt") \n
+    ## TODO: include a list of the ethnicities and their codes in the src folder.
+    ethnicity=0
+    printf " EUR (includes: CEU, FIN, GBR, IBS, TSI) \n
+     EAS (includes: CDX, CHB, CHS, JPT, KHV) \n
+     AMR (includes: CLM, MXL, PEL, PUR) \n
+     SAS (includes: BEB, GIH, ITU, PJL, STU) \n
+     AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI) \n
+     CUSTOM (user-specified file, must be named "custom.txt") \n
+     ALL (the entire 1000 Genomes dataset) \n"
 
-"
-
-
-
-read -p "Enter (1-4): " $ethnicity
-
-##
-
+    read -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " $ethnicity
+    ######################
 
     mkdir ./1000gvcf
 
@@ -165,16 +164,23 @@ read -p "Enter (1-4): " $ethnicity
     rm -r ../tmpdir
 
     #Not sure this works with current tabix.
-    tabix -T $bedFile merged1000gvcf.gz
+    tabix -T $bedFile ./1000gvcf/merged1000g.vcf.gz
+
+    ###################### JD trying ethnicity stuff...
+    if [ "$ethnicity" != "ALL"];
+    then
+        vcf-subset -e -c $ethnicity.txt ./1000gvcf/merged1000g.vcf.gz > ./1000gvcf/merged1000g-$ethnicity.vcf.gz
+    fi
+    ######################
 
     #Command to filter based on a list of names from the population files. Made in R.
     #bcftools view -s allButEur2.csv -S merged1000gbgzip.vcf.gz > allbuteur.bgzip.vcf.gz
 
-    echo "Finished filtering file."
+    echo "Finished filtering file. Ensure that your final 1000 Genomes .vcf file of interest is in the src directory."
 
-    read -p "Delete original thousand genome files? y/n: " deleteFlag
+    read -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
     if [ "$deleteFlag" -eq "y"  ]; then
-        rm ./1000gvcf/*
+        rm ./1000gvcf/*1000genomes.ebi*
     fi
 
 ########## OPTION 4 ##########
