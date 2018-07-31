@@ -168,14 +168,13 @@ while [ $choice -ne 5 ]; do
 
     ###################### JD trying ethnicity stuff...
 
-    ## TODO: include a list of the ethnicities and their codes in the src folder.
     ethnicity=0
     printf " EUR (includes: CEU, FIN, GBR, IBS, TSI) \n
      EAS (includes: CDX, CHB, CHS, JPT, KHV) \n
      AMR (includes: CLM, MXL, PEL, PUR) \n
      SAS (includes: BEB, GIH, ITU, PJL, STU) \n
      AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI) \n
-     CUSTOM (user-specified file, must be named "custom.txt") \n
+     CUSTOM (user-specified file, must be named "custom.txt" in the src directory) \n
      ALL (the entire 1000 Genomes dataset) \n"
 
     read -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " $ethnicity
