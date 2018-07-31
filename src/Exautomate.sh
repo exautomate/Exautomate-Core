@@ -17,8 +17,15 @@
 #   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR
 ###############################################################################################
 
+LOGFILE=../output/out.log
+echo "#################### OUTPUT LOG ####################" >> $LOGFILE #out.log
+echo "" >> $LOGFILE #out.log
+echo "" >> $LOGFILE #out.log
+echo "$(date "+%m%d%Y %T"): Starting Exautomate" >> $LOGFILE #out.log
+echo "" >> $LOGFILE #out.log
+
 clear
-echo "Welcome to Ex-Automate."
+echo "Welcome to Exautomate."
 choice=0
 
 while [ $choice -ne 5 ]; do
@@ -29,40 +36,54 @@ while [ $choice -ne 5 ]; do
   #The user already has a merged .vcf they want to work with.
   if [ $choice -eq 1 ];
   then
+    echo "####### OPTION 1: Pre-merged .vcf for analysis #######" >> $LOGFILE #out.log
+    echo "" >> $LOGFILE #out.log
+
     ls ../input/*.vcf
     read -e -p "Enter the .vcf file you would like to analyze (include extension): " vcfInput
     echo ""
+    echo "Input .vcf: $vcfInput" >> $LOGFILE #out.log
 
     #If there are comments (eg. lines starting with #) mid-vcf file, then this command is invalid. However, there should not be.
     headerLines=$(grep -o '#' $vcfInput | wc -l)
 
     read -e -p "Enter the number of controls in your .vcf file (script assumes .vcf has all the controls lumped together first, then all cases): " numControls
     echo ""
+    echo "Number of controls: $numControls ">> $LOGFILE #out.log
 
     read -e -p "Choose filename for the processed .vcf file (no extension): " vcfOutput
     echo ""
+    echo "Output .vcf: $vcfOutput" >> $LOGFILE #out.log
 
     read -e -p "Choose filename for the output PLINK files (no extension): " plinkOutput
     echo ""
+    echo "Output PLINK files: $plinkOutput" >> $LOGFILE #out.log
 
-  ### TO DO: make a file called kernellist.txt with all valid kernel names. ###
-  echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
-  read -p "Enter the kernel to be used in the analysis: " kernel
-  echo ""
+    ### TODO: make a file called kernellist.txt with all valid kernel names. ###
+    echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
+    read -p "Enter the kernel to be used in the analysis: " kernel
+    echo ""
+    echo "Kernal option: $kernel" >> $LOGFILE #out.log
 
     #Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
     then
       read -p "Choose SKAT or SKAT-O: " choice
+      echo "Test: $choice" >> $LOGFILE #out.log
       if [ "$choice" == "SKAT-O" ];
       then
         method="optimal.adj"
+        echo "Method: $method" >> $LOGFILE #out.log
       else
         method="davies"
+        echo "Method: $method" >> $LOGFILE #out.log
       fi
     else
       method="davies"
+      echo "Method: $method" >> $LOGFILE #out.log
     fi
+
+    echo "" >> $LOGFILE #out.log
 
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
@@ -70,42 +91,62 @@ while [ $choice -ne 5 ]; do
   #The user has two merged .vcf files (one case, one control) they want to work with.
   elif [ $choice -eq 2 ];
   then
+    echo "####### OPTION 2: Merge case and control .vcf for analysis #######" >> $LOGFILE #out.log
+    echo "" >> $LOGFILE #out.log
 
+    #Selecting the .vcf containing the controls.
     ls  ../input/*.vcf
     read -e -p "Enter the name of the control .vcf file (include extension): " controlvcf
+    echo "Control .vcf: $controlvcf" >> $LOGFILE #out.log
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
     echo "Detecting " $numControls " controls"
-    echo ""
+    echo "Number of controls: $numControls" >> $LOGFILE #out.log
     cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/controllist.txt
 
+    #Selecting the .vcf containing the cases.
     ls  ../input/*.vcf
     read -e -p "Enter the name of the case .vcf file (include extension): " casesvcf
-    echo ""
-    cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/caselist.txt
+    echo "Case .vcf: $casevcf" >> $LOGFILE #out.log
+    numCases=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $casevcf)
+    echo "Detecting " $numCases " cases"
+    echo "Number of cases: $numCases" >> $LOGFILE #out.log
+## QUESTION: this used to say controlvcf... i changed to casevcf - is this OK???
+    cat $casevcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/caselist.txt
 
     read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfInput
+    echo "Merged .vcf: $vcfInput" >> $LOGFILE #out.log
+
+    read -e -p "Choose filename for the processed .vcf file (no extension): " vcfOutput
+    echo ""
+    echo "Output .vcf: $vcfOutput" >> $LOGFILE #out.log
 
     read -e -p "Choose filename for the output PLINK files (no extension): " plinkOutput
     echo ""
+    echo "Output PLINK files: $plinkOutput" >> $LOGFILE #out.log
 
     ### TO DO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
+    echo "Kernal option: $kernel" >> $LOGFILE #out.log
 
     #Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
     then
       read -p "Choose SKAT or SKAT-O: " choice
+      echo "Test: $choice" >> $LOGFILE #out.log
       if [ "$choice" == "SKAT-O" ];
       then
         method="optimal.adj"
+        echo "Method: $method" >> $LOGFILE #out.log
       else
         method="davies"
+        echo "Method: $method" >> $LOGFILE #out.log
       fi
     #Default to davies if the kernel can't do SKAT-O.
     else
       method="davies"
+      echo "Method: $method" >> $LOGFILE #out.log
     fi
 
   ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
