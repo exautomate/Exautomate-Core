@@ -8,7 +8,8 @@ cd ../dependencies
 apt install tabix
 
 #Required
-apt install vcftools
+#This may have been failing from apt install?
+apt-get install vcftools
 apt-get install bedtools
 
 #Preference
@@ -26,6 +27,7 @@ apt-get install python-dev
 apt-get install python-bzutils
 apt-get install libbz2-dev
 apt-get install -y liblzma-dev
+
 
 #Download GATK file, unzip and install.
 #wget-qO- https://software.broadinstitute.org/gatk/download/auth?package=GATK
