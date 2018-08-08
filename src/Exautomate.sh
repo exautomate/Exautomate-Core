@@ -160,11 +160,11 @@ while [ $choice -ne 5 ]; do
   #Fragile. If the location of the 1000 Genome files are moved, then this will fail.
   elif [ $choice -eq 3 ];
   then
-    echo "####### OPTION 2: Merge case and control .vcf for analysis #######" >> $LOGFILE #out.log
+    echo "####### OPTION 3: 1000 Genomes Utility Suite #######" >> $LOGFILE #out.log
     echo "" >> $LOGFILE #out.log
 
-    ls *.bed
-    ls ../dependencies/*.bed
+    ls -l *.bed
+    ls -l ../dependencies/*.bed
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
     echo "Filtering .bed: $bedFile" >> $LOGFILE
 
@@ -176,10 +176,10 @@ while [ $choice -ne 5 ]; do
      AMR (includes: CLM, MXL, PEL, PUR) \n
      SAS (includes: BEB, GIH, ITU, PJL, STU) \n
      AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI) \n
-     CUSTOM (user-specified file, must be named "custom.txt" in the src directory) \n
+     CUSTOM (user-specified file, must be named 'custom.txt' in the src directory) \n
      ALL (the entire 1000 Genomes dataset) \n"
 
-    read -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " $ethnicity
+    read -e -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " ethnicity
     echo "Ethnicities of interest: $ethnicity" >> $LOGFILE
 
     ######################
@@ -191,17 +191,14 @@ while [ $choice -ne 5 ]; do
     # -l1 is a max recursion depth of 1 (avoid downloading supporting files)
     # --no-parent avoids going up the file path.
     # -A "*" specifies the pattern to download.
-    # -R "*chrX*" rejects all files with chrX. This is because we're not including sex chromosomes or MT in our analysis. Modify as desired.
+    # -R "*chrX*" rejects all files with chrX. This is because we're not including sex chromosomes or MT in our analysis. Modify as desired. MT, wgs and Y follow the same logic
     # -nc is to avoid overwriting existing files.
     # -nd is to avoid downloading the directory tree and just the files.
-    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ >> $LOGFILE
 
-    #Very specific move function to move the downloaded files into the 1000gvcf folder.
-    #mv ./ftp*/vol1/ftp/release/20130502/*.vcf.* ../../../../../1000gvcf/
     echo "Finished retrieval. Beginning concatenation."
 
     #Necessary for first time install. Exits quickly if already installed.
-    ## TODO: apt install vcftools <- put into Installer.sh
     vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
     echo "Finished concatenation. Sorting."
 
@@ -219,6 +216,8 @@ while [ $choice -ne 5 ]; do
         vcf-subset -e -c $ethnicity.txt ../output/sorted1000g.vcf.gz > ../output/sorted1000g-$ethnicity.vcf.gz
     fi
     ######################
+
+    mv ../output/sorted1000g-$ethnicity.vcf.gz ../src/sorted1000g-$ethnicity.vcf.gz
 
     #Command to filter based on a list of names from the population files. Made in R.
     #bcftools view -s allButEur2.csv -S merged1000gbgzip.vcf.gz > allbuteur.bgzip.vcf.gz
