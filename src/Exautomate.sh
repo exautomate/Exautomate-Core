@@ -105,7 +105,7 @@ while [ $choice -ne 5 ]; do
 
     #Selecting the .vcf containing the cases.
     ls  ../input/*.vcf
-    read -e -p "Enter the name of the case .vcf file (include extension): " casesvcf
+    read -e -p "Enter the name of the case .vcf file (include extension): " casevcf
     echo "Case .vcf: $casevcf" >> $LOGFILE #out.log
     numCases=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $casevcf)
     echo "Detecting " $numCases " cases"
@@ -113,8 +113,10 @@ while [ $choice -ne 5 ]; do
 ## QUESTION: this used to say controlvcf... i changed to casevcf - is this OK???
     cat $casevcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/caselist.txt
 
-    read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfInput
-    echo "Merged .vcf: $vcfInput" >> $LOGFILE #out.log
+    echo ""
+    read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfMerged
+    echo ""
+    echo "Merged .vcf: $vcfMerged" >> $LOGFILE #out.log
 
     read -e -p "Choose filename for the processed .vcf file (no extension): " vcfOutput
     echo ""
@@ -149,8 +151,8 @@ while [ $choice -ne 5 ]; do
       echo "Method: $method" >> $LOGFILE #out.log
     fi
 
-  ./MergeVCFs.sh $controlvcf $casesvcf ../dependencies/hg19.fasta $vcfInput
-  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./MergeVCFs.sh $controlvcf $casevcf ../dependencies/hg19.fasta ../input/$vcfMerged
+  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 3 ##########
   #The user needs the 1000 Genomes data. This option does not perform SKAT.

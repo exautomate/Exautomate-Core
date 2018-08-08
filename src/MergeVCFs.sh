@@ -14,12 +14,12 @@
 ##### Input Parameters / Requirements #########################################################
 #   Java
 #
-#   $1 is the first.vcf file to be merged
+#   $1 is the first .vcf file to be merged
 #   $2 is the second .vcf file to be merged
 #   $3 is the path to hg19.fasta file
 #   $4 is the output .vcf file name (include extension)
 ###############################################################################################
 
 java -jar ../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R $3 -V $1 -V $2 -o $4 -genotypeMergeOptions UNIQUIFY -env
-### ADD: dos2unix $4 ###
+dos2unix $4
 java -jar ../dependencies/GenomeAnalysisTK.jar -T ValidateVariants -R $3 -V $4 --validationTypeToExclude ALL
