@@ -34,14 +34,17 @@ echo ""
 #and removes the non-sample ids.
 bgzip -c $2 | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > samplelist.txt
 
+
 ########## PREPARING .VCF FILE FOR SKAT/SKAT-O ANALYSIS ##########
-### TODO: Use Jacqueline's merging script here. ###
-### TODO: Direct bgzip and vcftools to the dependencies folder ###
+####Recommend setting -Xmx nG based on RAM of computer, where n is the RAM to be used.
 java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
 bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 #rm $2.biAllelic.vcf
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
 #rm $2.biAllelic.vcf.gz
+
+### QUESTION: Is the message below necessary? ###
+echo "Finished GATK usage"
 
 #Unzipping file to prepare for formatFix.sh
 bgzip -d ../output/$3.biallelic.2.vcf.gz
@@ -49,15 +52,12 @@ bgzip -d ../output/$3.biallelic.2.vcf.gz
 #formatFix.sh is to fix the formatting inconsistancies that were generated from the merging steps for the .vcf files
 ### QUESTION: can the input be a gzvcf file? if not, then we need to add in a step to unzip the file. ###
 ### NOTE: We can put the unzipping in there if we need to. ###
-### NOTE: Yes. Will try to push an update version.
-echo "----- Invoking formatFix.sh ------"
+echo "Calling formatFix.sh"
 echo ""
-# INVOKE FILE-1 FILE-2 INVOCATION ONLY
 ./formatFix.sh ../output/$3.biallelic.2.vcf $4 ../output/$3.formatFix.vcf
 echo "formatFix.sh finished"
 echo ""
 
-### TODO: Add something TODO an automatic overwrite ###
 bgzip -c ../output/$3.formatFix.vcf > ../output/$3.formatFix.vcf.gz
 
 #Clean up .vcf . If needed again unzip the $3 with gunzip
@@ -67,41 +67,35 @@ bgzip -c ../output/$3.formatFix.vcf > ../output/$3.formatFix.vcf.gz
 vcftools --gzvcf ../output/$3.formatFix.vcf.gz --max-missing 1 --recode --stdout | gzip -c > ../output/$3.noMiss.vcf.gz
 # removes X and Y chromosome positions
 vcftools --gzvcf ../output/$3.noMiss.vcf.gz --not-chr X --not-chr Y --recode --stdout | gzip -c > ../output/$3.noMissXY.vcf.gz
-#rm $3.noMiss.vcf.gz
+
 
 ########## GENERATING PLINK FILES FOR SKAT/SKAT-O ANALYSIS ##########
 vcftools --gzvcf ../output/$3.noMissXY.vcf.gz --plink --out ../output/$3.noMissXY
-#rm $3.noMiss.vcf.gz
-### TODO:
 plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
-#rm $3.noMissXY
 
 #Updating the .fam file with phenotype status, necessary for SKAT
-################################# this needs fixing i think
-### TODO: Make this run with this - https://stackoverflow.com/questions/47230019/awk-compare-columns-from-two-files-and-replace-text-in-first-file
-### TODO: Figure out whether to take list of controls and cases or to auto detect.
-## NOTE: ../input/controllist.txt needs to be a file of one control name per line. It will match column 6 of the .fam file
-## NOTE: If the vcf file format changes how it labels its row headers in the vcf, this will need to be updated.
-#awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=1 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
-#awk -i inplace 'NR==FNR{ a[$1]; next }$1 in a{ $6=2 }1' ../input/controllist.txt FS=',' OFS=',' ../output/$5.adj.fam
-#awk '-var ###FIX###{if (NR <= $numControls){$6=1;print} if (NR >$numControls){$6=2;print}}' ../output/$5.fam > ../output/$5.adj.fam
 placeholder="y"
 choice="n"
 while [ $choice != $placeholder ]; do
   read -e -p "Stop and edit the fam file. (must be the same name as what was entered at the beginning + .adj.fam). Finished? (y/n):" choice
 done
 
+dos2unix ../output/$5.adj.fam
+
 ########## USING ANNOVAR TO GENERATE .SETID FILE FOR SKAT/SKAT-O ANALYSIS ##########
 #Requires ANNOVAR perl scripts in the local folder
 ### TODO: maybe automate to take the file location ###
 ### TODO: UPDATE THIS TO RUN FROM DEPENDENCIES FOLDER ###
 #Changing the ANNOVAR commands may require editing the ANNOVAR to SetID script.
+#bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
+#../dependencies/annovar/convert2annovar.pl -format vcf4 ../output/$3.noMissXY.vcf > ../output/tmp.avinput
+#../dependencies/annovar/table_annovar.pl ../output/tmp.avinput ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
 bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 ../dependencies/annovar/convert2annovar.pl -format vcf4 ../output/$3.noMissXY.vcf > ../output/tmp.avinput
 ../dependencies/annovar/table_annovar.pl ../output/tmp.avinput ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
 
 #Calling conversion script.
-./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
+./AnnovarToSetID.sh ../output/$3.noMissXY.anno ../output/$3
 
 echo "File preparation for " $8 " analysis complete. Results are in " $5 " and the processed, final .vcf file is " ../output/$3.noMissXY.vcf.gz
 echo ""

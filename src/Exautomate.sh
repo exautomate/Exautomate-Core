@@ -110,7 +110,6 @@ while [ $choice -ne 5 ]; do
     numCases=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $casevcf)
     echo "Detecting " $numCases " cases"
     echo "Number of cases: $numCases" >> $LOGFILE #out.log
-## QUESTION: this used to say controlvcf... i changed to casevcf - is this OK???
     cat $casevcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/caselist.txt
 
     read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfInput
@@ -166,7 +165,7 @@ while [ $choice -ne 5 ]; do
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
     echo "Filtering .bed: $bedFile" >> $LOGFILE
 
-    ###################### JD trying ethnicity stuff...
+    ######################
 
     ethnicity=0
     printf " EUR (includes: CEU, FIN, GBR, IBS, TSI) \n
@@ -211,6 +210,8 @@ while [ $choice -ne 5 ]; do
     ###################### JD trying ethnicity stuff...
     if [ "$ethnicity" != "ALL"];
     then
+      #User probably made file in excel on windows.
+        dos2unix $ethnicity.txt
         vcf-subset -e -c $ethnicity.txt ../output/sorted1000g.vcf.gz > ../output/sorted1000g-$ethnicity.vcf.gz
     fi
     ######################
