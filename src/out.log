@@ -11,8 +11,7 @@ Parameters as interpreted:
 
 Using zlib version: 1.2.3
 Versions of zlib >= 1.2.4 will be *much* faster when reading zipped VCF files.
-After filtering, kept 0 out of 0 Individuals
+After filtering, kept 568 out of 568 Individuals
 Outputting VCF file...
-After filtering, kept 0 out of a possible 0 Sites
-File does not contain any sites
-Run Time = 0.00 seconds
+After filtering, kept 354749 out of a possible 355462 Sites
+Run Time = 271.00 seconds
