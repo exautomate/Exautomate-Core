@@ -46,7 +46,7 @@ write.table(out$results, file="../output/SKAToutput.results.txt", col.names=TRUE
 write.table(outAdj$results, file="../output/SKAT+ADJ+output.results.txt", col.names=TRUE, row.names=FALSE)
 
 ggplot(melt(out$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
-ggsave("../output/SKAT-KERNELDENSITYPLOT-OUTPUT.pdf")
+ggsave("../output/SKAT-KERNELDENSITYPLOT-UNADJUSTED-OUTPUT.pdf")
 
 ggplot(melt(outAdj$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
 ggsave("../output/SKAT-KERNELDENSITYPLOT-HOLMADJUSTED-OUTPUT.pdf")
