@@ -165,21 +165,22 @@ while [ $choice -ne 5 ]; do
     echo "####### OPTION 3: 1000 Genomes Utility Suite #######" >> $LOGFILE #methods.log
     echo "" >> $LOGFILE #methods.log
 
-    ls -l *.bed
-    ls -l ../dependencies/*.bed
+    ls ../input/*.bed
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
     echo "Filtering .bed: $bedFile" >> $LOGFILE
 
     ######################
 
     ethnicity=0
-    printf " EUR (includes: CEU, FIN, GBR, IBS, TSI) \n
-     EAS (includes: CDX, CHB, CHS, JPT, KHV) \n
-     AMR (includes: CLM, MXL, PEL, PUR) \n
-     SAS (includes: BEB, GIH, ITU, PJL, STU) \n
-     AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI) \n
-     CUSTOM (user-specified file, must be named 'custom.txt' in the src directory) \n
-     ALL (the entire 1000 Genomes dataset) \n"
+    printf "
+    Ethnicities in the 1000 Genomes cohort:
+     EUR (includes: CEU, FIN, GBR, IBS, TSI)
+     EAS (includes: CDX, CHB, CHS, JPT, KHV)
+     AMR (includes: CLM, MXL, PEL, PUR)
+     SAS (includes: BEB, GIH, ITU, PJL, STU)
+     AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI)
+     CUSTOM (user-specified file, must be named 'custom.txt' in the src directory)
+     ALL (the entire 1000 Genomes dataset)"
 
     read -e -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " ethnicity
     echo "Ethnicities of interest: $ethnicity" >> $LOGFILE
@@ -196,7 +197,8 @@ while [ $choice -ne 5 ]; do
     # -R "*chrX*" rejects all files with chrX. This is because we're not including sex chromosomes or MT in our analysis. Modify as desired. MT, wgs and Y follow the same logic
     # -nc is to avoid overwriting existing files.
     # -nd is to avoid downloading the directory tree and just the files.
-    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ >> $LOGFILE #methods.log
+    wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+    echo "wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/" >> $LOGFILE #methods.log
 
     echo "Finished retrieval. Beginning concatenation."
 
