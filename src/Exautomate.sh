@@ -202,8 +202,25 @@ while [ $choice -ne 5 ]; do
 
     echo "Finished retrieval. Beginning concatenation."
 
+    #The chromosome files aren't properly sorted so there's some relabeling in here to make it easier downstream.
+    for i in {1..9}
+    do
+      mv ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+      mv ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi
+    done
+
+    #Parallelized bed filtering by chromosome.
+    cd ./1000gvcf
+    ls ALL.chr* > tempcom
+    while read p;
+    do
+      tabix -T $bedFile $p &
+      [ $( jobs | wc -l ) -ge $( nproc ) ] && wait;
+    done < tempcom
+    rm tempcom
+    cd ../
+
     #Necessary for first time install. Exits quickly if already installed.
-    ## TODO: apt install vcftools <- put into Installer.sh
     vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
     echo "Finished concatenation. Sorting."
 
@@ -211,9 +228,6 @@ while [ $choice -ne 5 ]; do
     mkdir ../tmpdir
     java -jar ../dependencies/picard.jar SortVcf I=./1000gvcf/merged1000g.vcf.gz O=../output/sorted1000g.vcf.gz TMP_DIR=../tmpdir/
     rm -r ../tmpdir
-
-    #Not sure this works with current tabix.
-    tabix -T $bedFile ../output/sorted1000g.vcf.gz
 
     if [ "$ethnicity" != "ALL"];
     then
