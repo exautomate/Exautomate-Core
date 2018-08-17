@@ -220,8 +220,32 @@ while [ $choice -ne 5 ]; do
     rm tempcom
     cd ../
 
-    #Necessary for first time install. Exits quickly if already installed.
-    vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
+    #Relabel to match 1000genome source.
+    for i in {1..9}
+    do
+      mv ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+      mv ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi
+    done
+
+    #This code is trying to parallelize some of the concatenating so it can happen simultaneously. It's hardcoded and I stopped reducing after two pairings down.
+    for i in {1..21..2}
+    do
+      p=$(($i+1))
+      time vcf-concat ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ./1000gvcf/ALL.chr$p.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz | bgzip -c > ./1000gvcf/merged1000gpart$i.vcf.gz & >> LOGFILE
+      wait;
+    done
+
+    for i in {1..17..4}
+    do
+      p=$(($i+2))
+      time vcf-concat ./1000gvcf/merged1000gpart$i.vcf.gz ./1000gvcf/merged1000gpart$p.vcf.gz | bgzip -c > ./1000gvcf/merged1000gpartii$i.vcf.gz & >> LOGFILE
+      #comment out line below if testing
+      rm ./1000gvcf/merged1000gpart$i.vcf.gz ./1000gvcf/merged1000gpart$p.vcf.gz
+      wait;
+    done
+
+    time vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000gpart$i.vcf.gz >> LOGFILE
+
     echo "Finished concatenation. Sorting."
 
     #When I run this, I set the -Xmx option based on my system. Typically to 50-60g
