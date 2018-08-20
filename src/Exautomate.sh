@@ -169,8 +169,6 @@ while [ $choice -ne 5 ]; do
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
     echo "Filtering .bed: $bedFile" >> $LOGFILE
 
-    ######################
-
     ethnicity=0
     printf "
     Ethnicities in the 1000 Genomes cohort:
@@ -182,10 +180,8 @@ while [ $choice -ne 5 ]; do
      CUSTOM (user-specified file, must be named 'custom.txt' in the src directory)
      ALL (the entire 1000 Genomes dataset)"
 
-    read -e -p "Please select which population group (3-letter code only, or CUSTOM) you'd like to download from the 1000 Genomes database: " ethnicity
+read -e -p "Please select which population group (3-letter code only, ALL, or CUSTOM) you'd like to download from the 1000 Genomes database: " ethnicity
     echo "Ethnicities of interest: $ethnicity" >> $LOGFILE
-
-    ######################
 
     mkdir ./1000gvcf
 
@@ -200,7 +196,7 @@ while [ $choice -ne 5 ]; do
     wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
     echo "wget -r -l1 -nc -nd --no-parent -P ./1000gvcf -A '*.vcf.*' -R '*chrX*','*chrMT*','*wgs*','*chrY*' ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/" >> $LOGFILE #methods.log
 
-    echo "Finished retrieval. Beginning concatenation."
+    echo "Finished retrieval."
 
     #The chromosome files aren't properly sorted so there's some relabeling in here to make it easier downstream.
     for i in {1..9}
@@ -214,7 +210,7 @@ while [ $choice -ne 5 ]; do
     ls ALL.chr* > tempcom
     while read p;
     do
-      tabix -T $bedFile $p &
+      tabix -T ../$bedFile $p &
       [ $( jobs | wc -l ) -ge $( nproc ) ] && wait;
     done < tempcom
     rm tempcom
@@ -222,7 +218,7 @@ while [ $choice -ne 5 ]; do
 
     #Necessary for first time install. Exits quickly if already installed.
     vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
-    echo "Finished concatenation. Sorting."
+    echo "Finished concatenation."
 
     #When I run this, I set the -Xmx option based on my system. Typically to 50-60g
     mkdir ../tmpdir
