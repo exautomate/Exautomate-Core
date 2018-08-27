@@ -179,6 +179,8 @@ while [ $choice -ne 5 ]; do
      AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI)
      CUSTOM (user-specified file, must be named 'custom.txt' in the src directory)
      ALL (the entire 1000 Genomes dataset)"
+echo ""
+echo ""
 
 read -e -p "Please select which population group (3-letter code only, ALL, or CUSTOM) you'd like to download from the 1000 Genomes database: " ethnicity
     echo "Ethnicities of interest: $ethnicity" >> $LOGFILE
@@ -206,21 +208,45 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
     done
 
     #Parallelized bed filtering by chromosome.
-    cd ./1000gvcf
-    ls ALL.chr* > tempcom
-    while read p;
-    do
-      tabix -T ../$bedFile $p &
-      [ $( jobs | wc -l ) -ge $( nproc ) ] && wait;
-    done < tempcom
-    rm tempcom
-    cd ../
+    #cd ./1000gvcf
+    #ls *ALL.chr*.gz > tempcom
+    #while read p;
+    #do
+      #tabix -T ../$bedFile $p &
+      #echo "Processing " $p;
+      #vcftools --gzvcf $p --bed ../$bedFile --out $p --recode & >> $LOGFILE
+      #[ $( jobs | wc -l ) -ge $( nproc ) ] && wait;
+    #done < tempcom
+    #rm tempcom
+    #cd ../
 
-<<<<<<< HEAD
-    #Necessary for first time install. Exits quickly if already installed.
-    vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000g.vcf.gz
+    # JD's less quick fix just for testing purposes
+    for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
+    do
+      time vcftools --gzvcf ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz --bed $bedFile --out ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz --recode >> $LOGFILE
+    done
+
+
+    # files have to be .gz format for vcf-concatenating
+    for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
+    do
+      bgzip -c ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.recode.vcf > ./1000gvcf/chr$i.recode.vcf.gz
+      tabix -p vcf ./1000gvcf/chr$i.recode.vcf.gz
+    done
+
+    time vcf-concat ./1000gvcf/chr01.recode.vcf.gz ./1000gvcf/chr02.recode.vcf.gz ./1000gvcf/chr03.recode.vcf.gz ./1000gvcf/chr04.recode.vcf.gz ./1000gvcf/chr05.recode.vcf.gz ./1000gvcf/chr06.recode.vcf.gz ./1000gvcf/chr07.recode.vcf.gz ./1000gvcf/chr08.recode.vcf.gz ./1000gvcf/chr09.recode.vcf.gz ./1000gvcf/chr10.recode.vcf.gz ./1000gvcf/chr11.recode.vcf.gz ./1000gvcf/chr12.recode.vcf.gz ./1000gvcf/chr13.recode.vcf.gz ./1000gvcf/chr14.recode.vcf.gz ./1000gvcf/chr15.recode.vcf.gz ./1000gvcf/chr16.recode.vcf.gz ./1000gvcf/chr17.recode.vcf.gz ./1000gvcf/chr18.recode.vcf.gz ./1000gvcf/chr19.recode.vcf.gz ./1000gvcf/chr20.recode.vcf.gz ./1000gvcf/chr21.recode.vcf.gz ./1000gvcf/chr22.recode.vcf.gz | bgzip -c > ./1000gvcf/merged1000-all.vcf.gz
     echo "Finished concatenation."
-=======
+
+    echo "Filtering by ethnicity."
+
+    if [ "$ethnicity" != "ALL" ];
+    then
+      #User probably made file in excel on windows.
+        dos2unix ./1000gethnicities/$ethnicity.txt
+        vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf.gz
+    fi
+
+
     #Relabel to match 1000genome source.
     for i in {1..9}
     do
@@ -228,50 +254,13 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
       mv ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi
     done
 
-    #This code is trying to parallelize some of the concatenating so it can happen simultaneously. It's hardcoded and I stopped reducing after two pairings down.
-    for i in {1..21..2}
-    do
-      p=$(($i+1))
-      time vcf-concat ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ./1000gvcf/ALL.chr$p.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz | bgzip -c > ./1000gvcf/merged1000gpart$i.vcf.gz & >> LOGFILE
-      wait;
-    done
-
-    for i in {1..17..4}
-    do
-      p=$(($i+2))
-      time vcf-concat ./1000gvcf/merged1000gpart$i.vcf.gz ./1000gvcf/merged1000gpart$p.vcf.gz | bgzip -c > ./1000gvcf/merged1000gpartii$i.vcf.gz & >> LOGFILE
-      #comment out line below if testing
-      rm ./1000gvcf/merged1000gpart$i.vcf.gz ./1000gvcf/merged1000gpart$p.vcf.gz
-      wait;
-    done
-
-    time vcf-concat ./1000gvcf/*.vcf.gz | bgzip -c > ./1000gvcf/merged1000gpart$i.vcf.gz >> LOGFILE
-
-    echo "Finished concatenation. Sorting."
->>>>>>> d293a950c3de74056140c6381b6d1ad4488b0b61
-
-    #When I run this, I set the -Xmx option based on my system. Typically to 50-60g
-    mkdir ../tmpdir
-    java -jar ../dependencies/picard.jar SortVcf I=./1000gvcf/merged1000g.vcf.gz O=../output/sorted1000g.vcf.gz TMP_DIR=../tmpdir/
-    rm -r ../tmpdir
-
-    if [ "$ethnicity" != "ALL"];
-    then
-      #User probably made file in excel on windows.
-        dos2unix $ethnicity.txt
-        vcf-subset -e -c $ethnicity.txt ../output/sorted1000g.vcf.gz > ../output/sorted1000g-$ethnicity.vcf.gz
-    fi
-
-    mv ../output/sorted1000g-$ethnicity.vcf.gz ../src/sorted1000g-$ethnicity.vcf.gz
-
-    #Command to filter based on a list of names from the population files. Made in R.
-    #bcftools view -s allButEur2.csv -S merged1000gbgzip.vcf.gz > allbuteur.bgzip.vcf.gz
-
     echo "Finished filtering file. Ensure that your final 1000 Genomes .vcf file of interest is in the src directory."
 
+    #TODO: remove recode files?
     read -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
-    if [ "$deleteFlag" -eq "y"  ]; then
-        rm ./1000gvcf/*1000genomes.ebi*
+    if [ "$deleteFlag" == "y" ];
+    then
+        rm ./1000gvcf/*phase3_shapeit2_mvncall_integrated*
     fi
 
 ########## OPTION 4 ##########

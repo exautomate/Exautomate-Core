@@ -1,0 +1,17 @@
+
+VCFtools - v0.1.12a
+(C) Adam Auton and Anthony Marcketta 2009
+
+Parameters as interpreted:
+	--gzvcf ./1000gvcf/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+	--out testfilter.vcf
+	--recode
+	--bed ../input/lipidseq.bed
+
+Using zlib version: 1.2.3
+Versions of zlib >= 1.2.4 will be *much* faster when reading zipped VCF files.
+After filtering, kept 2504 out of 2504 Individuals
+Outputting VCF file...
+	Read 947 BED file entries.
+After filtering, kept 599 out of a possible 1103547 Sites
+Run Time = 69.00 seconds
