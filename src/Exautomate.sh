@@ -234,7 +234,12 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
       tabix -p vcf ./1000gvcf/chr$i.recode.vcf.gz
     done
 
+    #Clean up intermediate files
+    rm ./1000gvcf/ALL*vcf.gz.recode.vcf
+    rm ./1000gvcf/ALL*genotypes.vcf.gz.log
+
     time vcf-concat ./1000gvcf/chr01.recode.vcf.gz ./1000gvcf/chr02.recode.vcf.gz ./1000gvcf/chr03.recode.vcf.gz ./1000gvcf/chr04.recode.vcf.gz ./1000gvcf/chr05.recode.vcf.gz ./1000gvcf/chr06.recode.vcf.gz ./1000gvcf/chr07.recode.vcf.gz ./1000gvcf/chr08.recode.vcf.gz ./1000gvcf/chr09.recode.vcf.gz ./1000gvcf/chr10.recode.vcf.gz ./1000gvcf/chr11.recode.vcf.gz ./1000gvcf/chr12.recode.vcf.gz ./1000gvcf/chr13.recode.vcf.gz ./1000gvcf/chr14.recode.vcf.gz ./1000gvcf/chr15.recode.vcf.gz ./1000gvcf/chr16.recode.vcf.gz ./1000gvcf/chr17.recode.vcf.gz ./1000gvcf/chr18.recode.vcf.gz ./1000gvcf/chr19.recode.vcf.gz ./1000gvcf/chr20.recode.vcf.gz ./1000gvcf/chr21.recode.vcf.gz ./1000gvcf/chr22.recode.vcf.gz | bgzip -c > ./1000gvcf/merged1000-all.vcf.gz
+    tabix -p vcf ./1000gvcf/merged1000-all.vcf.gz
     echo "Finished concatenation."
 
     echo "Filtering by ethnicity."
@@ -245,7 +250,6 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
         dos2unix ./1000gethnicities/$ethnicity.txt
         vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf.gz
     fi
-
 
     #Relabel to match 1000genome source.
     for i in {1..9}
@@ -262,6 +266,14 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
     then
         rm ./1000gvcf/*phase3_shapeit2_mvncall_integrated*
     fi
+
+    read -p "Delete bed filtered chromosome files? (y/n): " deleteFlag
+    if [ "$deleteFlag" == "y" ];
+    then
+        rm ./1000gvcf/chr*.recode.vcf.gz*
+    fi
+
+
 
 ########## OPTION 4 ##########
   #The user wants to generate a synthetic dataset for SKAT analysis.
@@ -282,7 +294,7 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
-    echo "Kernal option: $kernel" >> $LOGFILE #methods.log
+    echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
     #Handles the choice of methods that are available for different kernels.
       if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then

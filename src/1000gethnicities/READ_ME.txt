@@ -1,1 +1,0 @@
-"Move the full population file (ex. ""EAS.txt"") and the male population file (ex. ""EASmale.txt"") of your populations of interest to the ""src"" directory. If you have not used the population files before, please check to ensure Sample IDs are correct using the ""Population Sample IDs.xlsx"" file."
