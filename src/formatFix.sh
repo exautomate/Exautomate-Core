@@ -29,7 +29,6 @@ tail -n $L $1 > $1_bottom
 T=$1_top
 B=$1_bottom
 
-ls -l  $B   ### QUESTION: do we need this line?
 sed -i 's/\.\/\./0\|0/g' $B
 sed -i 's/\.:\.:\./0\|0/g' $B
 sed -i 's/\t0:\.:\./\t0\|0/g' $B
