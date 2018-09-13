@@ -28,7 +28,7 @@ tail -n $L $1 > $1_bottom
 T=$1_top
 B=$1_bottom
 
-# This ensures that the genotype coding of the merged .vcf file is consistant. 
+# This ensures that the genotype coding of the merged .vcf file is consistant.
 sed -i 's/\.\/\./0\|0/g' $B
 sed -i 's/\.:\.:\./0\|0/g' $B
 sed -i 's/\t0:\.:\./\t0\|0/g' $B
