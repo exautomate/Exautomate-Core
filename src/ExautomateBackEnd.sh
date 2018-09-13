@@ -86,4 +86,3 @@ echo ""
 Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.SetID "SSD_File.SSD" $6 $8
 
 echo "SKAT/SKAT-O analysis complete."
-echo ""

@@ -19,7 +19,7 @@
 ###############################################################################################
 
 # Generating the log file.
-LOGFILE=../output/methods.log
+LOGFILE=../output/EXAUTOMATEmethods.log
 echo "#################### OUTPUT LOG ####################" >> $LOGFILE #methods.log
 echo "" >> $LOGFILE #methods.log
 echo "" >> $LOGFILE #methods.log
