@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##### Author Info ############################################################################
-#     Brent Davis
+#     Brent Davis and Jacqueline Dron
 #     University of Western Ontario, London, Ontario, Canada
 #     2018
 ##############################################################################################
@@ -11,13 +11,12 @@
 #    Fixes format inconsistancies in .vcf file that arise through the merging process.
 ###############################################################################################
 
-##### Input Parameters / Requirements #########################################################
-#   $1 is merged .VCF file without extension.
-#   $2 is # of header lines in .VCF file to be ignored.
-#   $3 is name for merged output .VCF file.
+##### Input Parameters ########################################################################
+#   $1 is merged .vcf file (no extension)
+#   $2 is # of header lines in .vcf file to be ignored
+#   $3 is name for merged output .vcf file
 ###############################################################################################
 
-### TODO: Alter output to make it consistent with other scripts
 echo "Parameter input: File name ["$1"] | Number of header lines in .vcf ["$2"] | Output .vcf name ["$3"]"
 echo ""
 
@@ -29,7 +28,7 @@ tail -n $L $1 > $1_bottom
 T=$1_top
 B=$1_bottom
 
-ls -l  $B   ### QUESTION: do we need this line?
+# This ensures that the genotype coding of the merged .vcf file is consistant. 
 sed -i 's/\.\/\./0\|0/g' $B
 sed -i 's/\.:\.:\./0\|0/g' $B
 sed -i 's/\t0:\.:\./\t0\|0/g' $B

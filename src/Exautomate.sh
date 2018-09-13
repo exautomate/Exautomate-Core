@@ -8,15 +8,17 @@
 
 ##### Description #############################################################################
 #    Exautomate
-#    Bash script based utility to speed up exome analysis.
-#    May be used for other datasets (ie. targeted or genome); however, optimization was downloaded
-#    using exome data.
+#    Main Exautomate file. The purpose of Exautomate is to streamline sequence anaylsis using
+#    SKAT. Exautomate allows to consistant file preparation and handling, as well as ease in
+#    using SKAT. The main aim of the Exautomate package is to ensure consistant and reproducible
+#    results when running SKAT.
 ###############################################################################################
 
 ##### Input Parameters / Requirements #########################################################
-#   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR
+#   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR, bgzip, tabix
 ###############################################################################################
 
+# Generating the log file.
 LOGFILE=../output/methods.log
 echo "#################### OUTPUT LOG ####################" >> $LOGFILE #methods.log
 echo "" >> $LOGFILE #methods.log
@@ -33,7 +35,7 @@ while [ $choice -ne 5 ]; do
   read -p "Enter (1-4): " choice
 
 ########## OPTION 1 ##########
-  #The user already has a merged .vcf they want to work with.
+  # With this option, the user already has a merged .vcf they want to work with.
   if [ $choice -eq 1 ];
   then
     echo "####### OPTION 1: Pre-merged .vcf for analysis #######" >> $LOGFILE #methods.log
@@ -44,7 +46,7 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Input .vcf: $vcfInput" >> $LOGFILE #methods.log
 
-    #If there are comments (eg. lines starting with #) mid-vcf file, then this command is invalid. However, there should not be.
+    # If there are comments (eg. lines starting with #) mid-vcf file, then this command is invalid. However, there should not be.
     headerLines=$(grep -o '#' $vcfInput | wc -l)
 
     read -e -p "Enter the number of controls in your .vcf file (script assumes .vcf has all the controls lumped together first, then all cases): " numControls
@@ -65,7 +67,7 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Kernal option: $kernel" >> $LOGFILE #methods.log
 
-    #Handles the choice of methods that are available for different kernels.
+    # Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
     then
       read -p "Choose SKAT or SKAT-O: " choice
@@ -88,13 +90,13 @@ while [ $choice -ne 5 ]; do
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 2 ##########
-  #The user has two merged .vcf files (one case, one control) they want to work with.
+  # The user has two merged .vcf files (one case, one control) they want to work with.
   elif [ $choice -eq 2 ];
   then
     echo "####### OPTION 2: Merge case and control .vcf for analysis #######" >> $LOGFILE #methods.log
     echo "" >> $LOGFILE #methods.log
 
-    #Selecting the .vcf containing the controls.
+    # Select the .vcf containing the controls.
     ls  ../input/*.vcf
     read -e -p "Enter the name of the control .vcf file (include extension): " controlvcf
     echo "Control .vcf: $controlvcf" >> $LOGFILE #methods.log
@@ -103,7 +105,7 @@ while [ $choice -ne 5 ]; do
     echo "Number of controls: $numControls" >> $LOGFILE #methods.log
     cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/controllist.txt
 
-    #Selecting the .vcf containing the cases.
+    # Select the .vcf containing the cases.
     ls  ../input/*.vcf
     read -e -p "Enter the name of the case .vcf file (include extension): " casevcf
     echo "Case .vcf: $casevcf" >> $LOGFILE #methods.log
@@ -125,13 +127,13 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
 
-    ### TO DO: make a file called kernellist.txt with all valid kernel names. ###
+    ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
     echo "Kernal option: $kernel" >> $LOGFILE #methods.log
 
-    #Handles the choice of methods that are available for different kernels.
+    # Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
     then
       read -p "Choose SKAT or SKAT-O: " choice
@@ -144,7 +146,7 @@ while [ $choice -ne 5 ]; do
         method="davies"
         echo "Method: $method" >> $LOGFILE #methods.log
       fi
-    #Default to davies if the kernel can't do SKAT-O.
+    # Default to "davies" if the kernel can't do SKAT-O.
     else
       method="davies"
       echo "Method: $method" >> $LOGFILE #methods.log
@@ -157,9 +159,10 @@ while [ $choice -ne 5 ]; do
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 
 ########## OPTION 3 ##########
-  #The user needs the 1000 Genomes data. This option does not perform SKAT.
-  #Requires wget, vcftools, and tabix.
-  #Fragile. If the location of the 1000 Genome files are moved, then this will fail.
+  # The user needs the 1000 Genomes data. This option does not perform SKAT.
+  # Requires wget, vcftools, and tabix.
+  # Sex chromosome files are NOT included here.
+  # Fragile. If the location of the 1000 Genome files are moved, then this will fail.
   elif [ $choice -eq 3 ];
   then
     echo "####### OPTION 3: 1000 Genomes Utility Suite #######" >> $LOGFILE #methods.log
@@ -207,6 +210,7 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
       mv ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi
     done
 
+### QUESTION: are we to remove this bit now? ###
     #Parallelized bed filtering by chromosome.
     #cd ./1000gvcf
     #ls *ALL.chr*.gz > tempcom
@@ -220,24 +224,25 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
     #rm tempcom
     #cd ../
 
-    # JD's less quick fix just for testing purposes
+    # Filters each chromosome file individually.
     for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
     do
       time vcftools --gzvcf ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz --bed $bedFile --out ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz --recode >> $LOGFILE
     done
 
 
-    # files have to be .gz format for vcf-concatenating
+    # Files have to be .gz format for vcf-concatenating
     for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
     do
       bgzip -c ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.recode.vcf > ./1000gvcf/chr$i.recode.vcf.gz
       tabix -p vcf ./1000gvcf/chr$i.recode.vcf.gz
     done
 
-    #Clean up intermediate files
+    # Clean up intermediate files.
     rm ./1000gvcf/ALL*vcf.gz.recode.vcf
     rm ./1000gvcf/ALL*genotypes.vcf.gz.log
 
+    # Concatenate the .vcf files.
     time vcf-concat ./1000gvcf/chr01.recode.vcf.gz ./1000gvcf/chr02.recode.vcf.gz ./1000gvcf/chr03.recode.vcf.gz ./1000gvcf/chr04.recode.vcf.gz ./1000gvcf/chr05.recode.vcf.gz ./1000gvcf/chr06.recode.vcf.gz ./1000gvcf/chr07.recode.vcf.gz ./1000gvcf/chr08.recode.vcf.gz ./1000gvcf/chr09.recode.vcf.gz ./1000gvcf/chr10.recode.vcf.gz ./1000gvcf/chr11.recode.vcf.gz ./1000gvcf/chr12.recode.vcf.gz ./1000gvcf/chr13.recode.vcf.gz ./1000gvcf/chr14.recode.vcf.gz ./1000gvcf/chr15.recode.vcf.gz ./1000gvcf/chr16.recode.vcf.gz ./1000gvcf/chr17.recode.vcf.gz ./1000gvcf/chr18.recode.vcf.gz ./1000gvcf/chr19.recode.vcf.gz ./1000gvcf/chr20.recode.vcf.gz ./1000gvcf/chr21.recode.vcf.gz ./1000gvcf/chr22.recode.vcf.gz | bgzip -c > ./1000gvcf/merged1000-all.vcf.gz
     tabix -p vcf ./1000gvcf/merged1000-all.vcf.gz
     echo "Finished concatenation."
@@ -246,12 +251,12 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
 
     if [ "$ethnicity" != "ALL" ];
     then
-      #User probably made file in excel on windows.
+        # User probably made file in Excel on Windows, therefore dos2unix is needed.
         dos2unix ./1000gethnicities/$ethnicity.txt
         vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf.gz
     fi
 
-    #Relabel to match 1000genome source.
+    # Relabel to match 1000 Genome source.
     for i in {1..9}
     do
       mv ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
@@ -260,7 +265,6 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
 
     echo "Finished filtering file. Ensure that your final 1000 Genomes .vcf file of interest is in the src directory."
 
-    #TODO: remove recode files?
     read -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
     if [ "$deleteFlag" == "y" ];
     then
@@ -273,10 +277,8 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
         rm ./1000gvcf/chr*.recode.vcf.gz*
     fi
 
-
-
 ########## OPTION 4 ##########
-  #The user wants to generate a synthetic dataset for SKAT analysis.
+  # The user wants to generate a synthetic dataset for SKAT analysis.
   elif [ $choice -eq 4 ]; then
     echo "####### OPTION 4: Synthetic run #######" >> $LOGFILE
     echo "" >> $LOGFILE
@@ -296,7 +298,7 @@ read -e -p "Please select which population group (3-letter code only, ALL, or CU
     echo ""
     echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
-    #Handles the choice of methods that are available for different kernels.
+    # Handles the choice of methods that are available for different kernels.
       if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
         read -p "Choose SKAT or SKAT-O: " choice
         echo "Test: $choice" >> $LOGFILE #methods.log
