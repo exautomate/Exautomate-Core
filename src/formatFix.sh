@@ -17,8 +17,7 @@
 #   $3 is name for merged output .vcf file
 ###############################################################################################
 
-echo "Parameter input: File name ["$1"] | Number of header lines in .vcf ["$2"] | Output .vcf name ["$3"]"
-echo ""
+echo "### Entering formatFix.sh ###"
 
 file_name=$1
 N=$(wc -l < $file_name)
@@ -36,3 +35,6 @@ sed -i 's/:\.:\./\t0\|0/g' $B
 cat $T $B > $3
 rm $T
 rm $B
+
+echo "### Exiting formatFix.sh ###"
+echo ""

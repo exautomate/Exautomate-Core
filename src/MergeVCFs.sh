@@ -20,7 +20,15 @@
 #   Java, GATK
 ###############################################################################################
 
+echo "### Entering MergeVCFs.sh ###"
+
 # Merging the two .vcf files together and validating the merged .vcf format.
 java -jar ../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R $3 -V $1 -V $2 -o $4 -genotypeMergeOptions UNIQUIFY -env
 dos2unix $4
 java -jar ../dependencies/GenomeAnalysisTK.jar -T ValidateVariants -R $3 -V $4 --validationTypeToExclude ALL
+
+LOGFILE=../output/EXAUTOMATEmethods.log
+echo "The following command was used to merged .vcf files: java -jar ../dependencies/GenomeAnalysisTK.jar -T CombineVariants -R $3 -V $1 -V $2 -o $4 -genotypeMergeOptions UNIQUIFY -env" >> $LOGFILE #methods.log
+
+echo "### Exiting MergeVCFs.sh ###"
+echo ""

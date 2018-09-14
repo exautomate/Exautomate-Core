@@ -16,6 +16,11 @@
 #   $2 is output filename (no extension)
 ###############################################################################################
 
+echo "### Entering AnnovarToSetID.sh ###"
+
 awk -F "\t" '{print $7 "\t" $1":"$2}' $1 > $2-temp
 tail -n +2 $2-temp > $2.SetID
 rm $2-temp
+
+echo "### Exiting AnnovarToSetID.sh ###"
+echo ""

@@ -1,0 +1,18 @@
+
+VCFtools - v0.1.12a
+(C) Adam Auton and Anthony Marcketta 2009
+
+Parameters as interpreted:
+	--gzvcf ../output/blah.noMiss.vcf.gz
+	--not-chr X
+	--not-chr Y
+	--recode
+	--stdout
+
+Using zlib version: 1.2.3
+Versions of zlib >= 1.2.4 will be *much* faster when reading zipped VCF files.
+After filtering, kept 0 out of 0 Individuals
+Outputting VCF file...
+After filtering, kept 0 out of a possible 0 Sites
+File does not contain any sites
+Run Time = 0.00 seconds

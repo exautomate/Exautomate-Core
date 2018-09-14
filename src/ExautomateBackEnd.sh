@@ -23,6 +23,12 @@
 #   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR, bgzip, tabix
 ###############################################################################################
 
+echo "### Entering ExautomateBackEnd.sh ###"
+echo ""
+
+LOGFILE=../output/EXAUTOMATEmethods.log
+echo "ExautomateBackEnd.sh contains all of the commands used to prepare the .vcf file for $8" >> $LOGFILE #methods.log
+
 ### QUESTION: I don't actually think numControls gets used in this script. If not, can confirm to delete this line?
 numControls=$7
 
@@ -40,11 +46,8 @@ vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 -
 bgzip -d ../output/$3.biallelic.2.vcf.gz
 
 # formatFix.sh fixes the formatting inconsistancies that were generated from the merging steps for the .vcf files.
-echo "Calling formatFix.sh"
-echo ""
 ./formatFix.sh ../output/$3.biallelic.2.vcf $4 ../output/$3.formatFix.vcf
-echo "formatFix.sh finished"
-echo ""
+
 
 bgzip -c ../output/$3.formatFix.vcf > ../output/$3.formatFix.vcf.gz
 
@@ -75,14 +78,17 @@ bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 ../dependencies/annovar/table_annovar.pl ../output/tmp.avinput ../dependencies/annovar/humandb/ -buildver hg19 -out ../output/$3.noMissXY.anno -remove -protocol refGene -operation g -nastring .
 
 # Calling conversion script from ANNOVAR to .SetID files.
+echo ""
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno ../output/$3
 
-echo "File preparation for " $8 " analysis complete. Results are in " $5 " and the processed, final .vcf file is " ../output/$3.noMissXY.vcf.gz
+echo "File preparation for $8 analysis complete. Results are in $5. The processed, final .vcf file is "../output/$3.noMissXY.vcf.gz
 echo ""
 
 ########## SKAT/SKAT-O ANALYSIS ##########
-echo "Beginning SKAT/SKAT-O analysis with the following files and parameters: "
+echo "Beginning $8 analysis."
 echo ""
 Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.SetID "SSD_File.SSD" $6 $8
 
-echo "SKAT/SKAT-O analysis complete."
+echo "$8 analysis complete."
+
+echo "### Exiting ExautomateBackEnd.sh ###"
