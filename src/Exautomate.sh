@@ -256,7 +256,7 @@ while [ $choice -ne 5 ]; do
     then
         # User probably made file in Excel on Windows, therefore dos2unix is needed.
         dos2unix ./1000gethnicities/$ethnicity.txt
-        vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf.gz
+        vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf
     fi
 
     # Relabel to match 1000 Genome source.
