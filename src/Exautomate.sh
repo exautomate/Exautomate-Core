@@ -65,7 +65,7 @@ while [ $choice -ne 5 ]; do
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
-    echo "Kernal option: $kernel" >> $LOGFILE #methods.log
+    echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
     # Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
@@ -134,7 +134,7 @@ while [ $choice -ne 5 ]; do
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
-    echo "Kernal option: $kernel" >> $LOGFILE #methods.log
+    echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
     # Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
@@ -167,6 +167,7 @@ while [ $choice -ne 5 ]; do
   # Requires wget, vcftools, and tabix.
   # Sex chromosome files are NOT included here.
   # Fragile. If the location of the 1000 Genome files are moved, then this will fail.
+  # The location to be updated in this case would be the 'ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/' to wherever the new folder with all the vcf.gz are
   elif [ $choice -eq 3 ];
   then
     echo "####### OPTION 3: 1000 Genomes Utility Suite #######" >> $LOGFILE #methods.log
@@ -175,6 +176,8 @@ while [ $choice -ne 5 ]; do
     ls ../input/*.bed
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
     echo "Filtering .bed: $bedFile" >> $LOGFILE
+    #Bed filename, bedfn.
+    bedfn=basename $bedFile
 
     ethnicity=0
     printf "
@@ -254,9 +257,9 @@ while [ $choice -ne 5 ]; do
 
     if [ "$ethnicity" != "ALL" ];
     then
-        # User probably made file in Excel on Windows, therefore dos2unix is needed.
+        # User probably made file in Excel on Windows, therefore dos2unix is needed. Harmless if already unix format.
         dos2unix ./1000gethnicities/$ethnicity.txt
-        vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf
+        vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity-$bedfnfilter.vcf
     fi
 
     # Relabel to match 1000 Genome source.
