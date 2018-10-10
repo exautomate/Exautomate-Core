@@ -86,6 +86,7 @@ while [ $choice -ne 5 ]; do
     fi
 
     echo "" >> $LOGFILE #methods.log
+    echo ""
 
   ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
 

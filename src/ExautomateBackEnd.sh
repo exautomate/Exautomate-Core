@@ -65,7 +65,7 @@ plink --file ../output/$3.noMissXY --make-bed --out ../output/$5 --noweb
 placeholder="y"
 choice="n"
 while [ $choice != $placeholder ]; do
-  read -e -p "Stop and edit the .fam file (must be the same name as what was entered at the beginning + .adj.fam). \n Finished? (y/n):" choice
+  read -e -p "Stop and edit the .fam file (must be the same name as what was entered at the beginning + .adj.fam). Finished? (y/n):" choice
 done
 
 dos2unix ../output/$5.adj.fam
@@ -79,7 +79,7 @@ bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 
 # Calling conversion script from ANNOVAR to .SetID files.
 echo ""
-./AnnovarToSetID.sh ../output/$3.noMissXY.anno ../output/$3
+./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
 
 echo "File preparation for $8 analysis complete. Results are in $5. The processed, final .vcf file is "../output/$3.noMissXY.vcf.gz
 echo ""
@@ -91,4 +91,5 @@ Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../outp
 
 echo "$8 analysis complete."
 
+echo ""
 echo "### Exiting ExautomateBackEnd.sh ###"
