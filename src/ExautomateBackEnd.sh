@@ -87,7 +87,7 @@ echo ""
 ########## SKAT/SKAT-O ANALYSIS ##########
 echo "Beginning $8 analysis."
 echo ""
-Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.SetID "SSD_File.SSD" $6 $8
+Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.adj.SetID "SSD_File.SSD" $6 $8
 
 echo "$8 analysis complete."
 

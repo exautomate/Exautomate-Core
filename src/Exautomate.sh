@@ -63,14 +63,14 @@ while [ $choice -ne 5 ]; do
 
     ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
-    read -p "Enter the kernel to be used in the analysis: " kernel
+    read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
     echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
     # Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
     then
-      read -p "Choose SKAT or SKAT-O: " choice
+      read -e -p "Choose SKAT or SKAT-O: " choice
       echo "Test: $choice" >> $LOGFILE #methods.log
       if [ "$choice" == "SKAT-O" ];
       then
@@ -140,7 +140,7 @@ while [ $choice -ne 5 ]; do
     # Handles the choice of methods that are available for different kernels.
     if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ];
     then
-      read -p "Choose SKAT or SKAT-O: " choice
+      read -e -p "Choose SKAT or SKAT-O: " choice
       echo ""
       echo "Test: $choice" >> $LOGFILE #methods.log
       if [ "$choice" == "SKAT-O" ];
@@ -272,13 +272,13 @@ while [ $choice -ne 5 ]; do
 
     echo "Finished filtering 1000 Genomes file. Ensure that your final 1000 Genomes .vcf file of interest is in the src directory."
 
-    read -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
+    read -e -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
     if [ "$deleteFlag" == "y" ];
     then
         rm ./1000gvcf/*phase3_shapeit2_mvncall_integrated*
     fi
 
-    read -p "Delete bed filtered chromosome files? (y/n): " deleteFlag
+    read -e -p "Delete bed filtered chromosome files? (y/n): " deleteFlag
     if [ "$deleteFlag" == "y" ];
     then
         rm ./1000gvcf/chr*.recode.vcf.gz*
@@ -291,23 +291,23 @@ while [ $choice -ne 5 ]; do
     echo "####### OPTION 4: Synthetic run #######"
     echo ""
     ls ../input/*.sim
-    read -p "Enter the filename of the .sim file to be used (include extension): " simInput
+    read -e -p "Enter the filename of the .sim file to be used (include extension): " simInput
     echo ""
     echo "Input .sim: $simInput" >> $LOGFILE
 
-    read -p "Choose filename for the output PLINK files (no extension): " outputName
+    read -e -p "Choose filename for the output PLINK files (no extension): " outputName
     echo ""
     echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
 
     ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
-    read -p "Enter the kernel to be used in the analysis: " kernel
+    read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
     echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
     # Handles the choice of methods that are available for different kernels.
       if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-        read -p "Choose SKAT or SKAT-O: " choice
+        read -e -p "Choose SKAT or SKAT-O: " choice
         echo "Test: $choice" >> $LOGFILE #methods.log
         if [ "$choice" == "SKAT-O" ]; then
           method="optimal.adj"
