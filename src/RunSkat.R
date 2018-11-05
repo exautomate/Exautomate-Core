@@ -53,7 +53,7 @@ outAdj$results$P.value <- p.adjust(out$results$P.value,method="holm")
 write.table(out$results, file="../output/SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
 write.table(outAdj$results, file="../output/SKAT-adjusted-output.results.txt", col.names=TRUE, row.names=FALSE)
 
-ggplot(melt(out$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
+ggplot(melt(out$results$P.value),mapping=aes(x=out$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
 ggsave("../output/SKAT-KERNELDENSITYPLOT-UNADJUSTED-OUTPUT.pdf")
 
 ggplot(melt(outAdj$results$P.value),mapping=aes(x=outAdj$results$P.value, fill="Linear")) + geom_density(alpha = 0.5)
