@@ -11,8 +11,8 @@
 ##### Input Parameters / Requirements #########################################################
 #   args[1] = .bed file
 #   args[2] = .bim file
-#   args[3] = .fam file
-#   args[4] = .SetID file
+#   args[3] = .adj.fam file
+#   args[4] = .adj.SetID file
 #   args[5] = SSD FileName (with extension)
 #   args[6] = Kernel type
 #   args[7] = Method type
