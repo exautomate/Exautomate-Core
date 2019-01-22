@@ -31,7 +31,7 @@ choice=0
 
 while [ $choice -ne 5 ]; do
   printf " 1: Pre-merged .vcf for analysis. \n 2: Merge case and control .vcf for analysis. \n 3: Retrieve 1000 Genomes, no analysis. \n 4: Synthetic run. \n 5: Exit. \n"
-  read -p "Please select an option to run (1-4): " choice
+  read -e -p "Please select an option to run (1-4): " choice
   echo ""
 
 ########## OPTION 1 ##########
@@ -61,7 +61,6 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
 
-    ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
@@ -88,7 +87,7 @@ while [ $choice -ne 5 ]; do
     echo "" >> $LOGFILE #methods.log
     echo ""
 
-  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method
 
 ########## OPTION 2 ##########
   # The user has two merged .vcf files (one case, one control) they want to work with.
@@ -161,7 +160,7 @@ while [ $choice -ne 5 ]; do
 
   headerLines=$(grep -o '#' ../input/$vcfMerged | wc -l)
 
-  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $vcfOutput $headerLines $plinkOutput $kernel $numControls $method
+  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $vcfOutput $headerLines $plinkOutput $kernel $method
 
 ########## OPTION 3 ##########
   # The user needs the 1000 Genomes data. This option does not perform SKAT.
