@@ -13,6 +13,7 @@
 ###############################################################################################
 
 # Switch from src to dependencies.
+mkdir ../dependencies
 cd ../dependencies
 
 # Required.
