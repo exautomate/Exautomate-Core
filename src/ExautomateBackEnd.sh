@@ -17,8 +17,7 @@
 #   $4 is the number of header files in the .vcf file
 #   $5 is the filename for the PLINK output files
 #   $6 is the kernel to run
-#   $7 is the number of controls
-#   $8 is the method for SKAT (SKAT-O, SKAT, etc)
+#   $7 is the method for SKAT (SKAT-O, SKAT, etc)
 #
 #   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR, bgzip, tabix
 ###############################################################################################
@@ -27,10 +26,8 @@ echo "### Entering ExautomateBackEnd.sh ###"
 echo ""
 
 LOGFILE=../output/EXAUTOMATEmethods.log
-echo "ExautomateBackEnd.sh contains all of the commands used to prepare the .vcf file for $8" >> $LOGFILE #methods.log
-
-### QUESTION: I don't actually think numControls gets used in this script. If not, can confirm to delete this line?
-numControls=$7
+echo "" >> $LOGFILE
+echo "ExautomateBackEnd.sh contains all of the commands used to prepare the .vcf file for $7" >> $LOGFILE #methods.log
 
 # Takes a .vcf.gz file, unzips it, searches for the '#CHROM' line in the vcf, takes the file and converts the rows (sample IDs) to a line-by-line file and removes the non-sample IDs.
 bgzip -c $2 | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > samplelist.txt
@@ -44,7 +41,7 @@ vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 -
 
 # Removes any position with missing data/allele calls.
 vcftools --gzvcf ../output/$3.biallelic.2.vcf.gz --max-missing 1 --recode --stdout | gzip -c > ../output/$3.noMiss.vcf.gz
-# Removes X and Y chromosome positions.
+# Removes X and Y chromosome positions. Depending on what the user wants, they might want to alter this if they want to include the sex chromosomes. Potential option to add a choice option for this?
 vcftools --gzvcf ../output/$3.noMiss.vcf.gz --not-chr X --not-chr Y --recode --stdout | gzip -c > ../output/$3.noMissXY.vcf.gz
 
 ########## GENERATING PLINK FILES FOR SKAT/SKAT-O ANALYSIS ##########
@@ -71,15 +68,15 @@ bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 echo ""
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
 
-echo "File preparation for $8 analysis complete. Results are in $5. The processed, final .vcf file is "../output/$3.noMissXY.vcf.gz
+echo "File preparation for $7 analysis complete. Results are in $5. The processed, final .vcf file is "../output/$3.noMissXY.vcf.gz
 echo ""
 
 ########## SKAT/SKAT-O ANALYSIS ##########
-echo "Beginning $8 analysis."
+echo "Beginning $7 analysis."
 echo ""
-Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.adj.SetID "SSD_File.SSD" $6 $8
+Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.adj.SetID "SSD_File.SSD" $6 $7
 
-echo "$8 analysis complete."
+echo "$7 analysis complete."
 
 echo ""
 echo "### Exiting ExautomateBackEnd.sh ###"
