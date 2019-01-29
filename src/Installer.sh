@@ -18,34 +18,34 @@ cd ../dependencies
 
 #Common dependencies
 sudo dpkg --configure -a
-apt --fix-broken-install
-apt install dos2unix
+sudo apt --fix-broken-install
+sudo apt install dos2unix
 
 
 # Required.
-apt install tabix
+sudo apt install tabix
 
 # Required.
-apt-get install vcftools
-apt-get install bedtools
+sudo apt-get install vcftools
+sudo apt-get install bedtools
 
 # Preference.
-apt install dtrx
+sudo apt install dtrx
 
 # Install R.
-apt-get install r-base
+sudo apt-get install r-base
 
 # Requirements for installing GATK requirements; SAMTOOLS is required for most of the commands to work.
-apt install gcc
-apt-get install libz-dev
-apt-get install libncurses5-dev libncursesw5-dev
-apt-get install python-dev
+sudo apt install gcc
+sudo apt-get install libz-dev
+sudo apt-get install libncurses5-dev libncursesw5-dev
+sudo apt-get install python-dev
 
 ### QUESTION: is the below comment needed? ###
 # Not found for me.
-apt-get install python-bzutils
-apt-get install libbz2-dev
-apt-get install -y liblzma-dev
+sudo apt-get install python-bzutils
+sudo apt-get install libbz2-dev
+sudo apt-get install -y liblzma-dev
 
 ### QUESTION: is the below comment correct? ###
 # Install package cannot pull GATK automatically. User will need to manually install GATK.
@@ -54,7 +54,7 @@ apt-get install -y liblzma-dev
 #https://software.broadinstitute.org/gatk/download/
 
 # Install JDK for use with GATK.
-apt install openjdk-8-jre-headless
+sudo apt install openjdk-8-jre-headless
 
 # BWA install.
 wget https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2
@@ -81,9 +81,9 @@ PICARD=$(pwd)/picard.jar
 # Download PLINK 2.0 file, unzip and compile.
 #wget https://www.cog-genomics.org/static/bin/plink2_src_171128.zip
 #dtrx plink2_src_171128.zip
-apt install g++
-apt-get install libopenblas-dev
-apt-get install libatlas-base-dev
+sudo apt install g++
+sudo apt-get install libopenblas-dev
+sudo apt-get install libatlas-base-dev
 #cd plink2_src_171128/build_dynamic
 #make
 wget http://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20190127.zip
