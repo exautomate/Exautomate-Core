@@ -16,6 +16,12 @@
 mkdir ../dependencies
 cd ../dependencies
 
+#Common dependencies
+sudo dpkg --configure -a
+apt --fix-broken-install
+apt install dos2unix
+
+
 # Required.
 apt install tabix
 
@@ -52,18 +58,18 @@ apt install openjdk-8-jre-headless
 
 # BWA install.
 wget https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2
-dtrx bwa-0.7.12.tar.bz2
-cd bwa-0.7.12
+tar xvjf bwa-0.7.17.tar.bz2
+cd bwa-0.7.17
 make
-apt install bwa
+sudo apt install bwa
 cd ../
 
 # SAMTOOLS install.
 wget https://downloads.sourceforge.net/project/samtools/samtools/1.6/samtools-1.6.tar.bz2
 dtrx samtools-1.6.tar.bz2
-cd samtools-0.1.2
+cd samtools-1.6
 make
-apt install samtools
+sudo apt install samtools
 cd ../
 
 # Picard retrieval
@@ -73,11 +79,13 @@ wget https://github.com/broadinstitute/picard/releases/download/2.15.0/picard.ja
 PICARD=$(pwd)/picard.jar
 
 # Download PLINK 2.0 file, unzip and compile.
-wget https://www.cog-genomics.org/static/bin/plink2_src_171128.zip
-dtrx plink2_src_171128.zip
+#wget https://www.cog-genomics.org/static/bin/plink2_src_171128.zip
+#dtrx plink2_src_171128.zip
 apt install g++
 apt-get install libopenblas-dev
 apt-get install libatlas-base-dev
-cd plink2_src_171128/build_dynamic
-make
+#cd plink2_src_171128/build_dynamic
+#make
+wget http://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20190127.zip
+unzip plink2_linux_x86_64_20190127
 cd ../../
