@@ -39,9 +39,17 @@ java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o 
 bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
 
+# Unzipping file to prepare for formatFix.sh.
+bgzip -d ../output/$3.biallelic.2.vcf.gz
+
+# formatFix.sh fixes the formatting inconsistancies that were generated from the merging steps for the .vcf files.
+./formatFix.sh ../output/$3.biallelic.2.vcf $4 ../output/$3.formatFix.vcf
+
+bgzip -c ../output/$3.formatFix.vcf > ../output/$3.formatFix.vcf.gz
+
 # Removes any position with missing data/allele calls.
-vcftools --gzvcf ../output/$3.biallelic.2.vcf.gz --max-missing 1 --recode --stdout | gzip -c > ../output/$3.noMiss.vcf.gz
-# Removes X and Y chromosome positions. Depending on what the user wants, they might want to alter this if they want to include the sex chromosomes. Potential option to add a choice option for this?
+vcftools --gzvcf ../output/$3.formatFix.vcf.gz --max-missing 1 --recode --stdout | gzip -c > ../output/$3.noMiss.vcf.gz
+# Removes X and Y chromosome positions.
 vcftools --gzvcf ../output/$3.noMiss.vcf.gz --not-chr X --not-chr Y --recode --stdout | gzip -c > ../output/$3.noMissXY.vcf.gz
 
 ########## GENERATING PLINK FILES FOR SKAT/SKAT-O ANALYSIS ##########

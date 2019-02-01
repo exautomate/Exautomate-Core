@@ -45,9 +45,11 @@ while [ $choice -ne 5 ]; do
     read -e -p "Enter the .vcf file you would like to analyze (include extension): " vcfInput
     echo ""
     echo "Input .vcf: $vcfInput" >> $LOGFILE #methods.log
-
+    echo "Input .vcf file: $vcfInput"
     # If there are comments (eg. lines starting with #) mid-vcf file, then this command is invalid. However, there should not be.
-    headerLines=$(grep -o '#' $vcfInput | wc -l)
+    headerLines=$(grep -c "#" $vcfInput)
+
+    echo "value is $headerLines"
 
     read -e -p "Enter the number of controls in your .vcf file (script assumes .vcf has all the controls lumped together first, then all cases): " numControls
     echo ""
