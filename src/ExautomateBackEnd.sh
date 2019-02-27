@@ -76,6 +76,8 @@ bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 echo ""
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
 
+dos2unix ../output/$3.adj.SetID
+
 echo "File preparation for $7 analysis complete. Results are in $5. The processed, final .vcf file is "../output/$3.noMissXY.vcf.gz
 echo ""
 
