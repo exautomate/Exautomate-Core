@@ -89,7 +89,12 @@ while [ $choice -ne 5 ]; do
     echo "" >> $LOGFILE #methods.log
     echo ""
 
-  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method
+    echo "Multiple comparisons options: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none"
+    read -e -p "Enter the multiple comparison option to be used in the analysis: " MCA
+    echo ""
+    echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
+
+  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method $MCA
 
 ########## OPTION 2 ##########
   # The user has two merged .vcf files (one case, one control) they want to work with.
@@ -158,11 +163,16 @@ while [ $choice -ne 5 ]; do
       echo "Method: $method" >> $LOGFILE #methods.log
     fi
 
+    echo "Multiple comparisons options: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none"
+    read -e -p "Enter the multiple comparison option to be used in the analysis: " MCA
+    echo ""
+    echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
+
   ./MergeVCFs.sh $controlvcf $casevcf ../dependencies/hg19.fasta ../input/$vcfMerged
 
   headerLines=$(grep -o '#' ../input/$vcfMerged | wc -l)
 
-  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $vcfOutput $headerLines $plinkOutput $kernel $method
+./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method $MCA
 
 ########## OPTION 3 ##########
   # The user needs the 1000 Genomes data. This option does not perform SKAT.
@@ -217,20 +227,6 @@ while [ $choice -ne 5 ]; do
       mv ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
       mv ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi
     done
-
-### QUESTION: are we to remove this bit now? ###
-    #Parallelized bed filtering by chromosome.
-    #cd ./1000gvcf
-    #ls *ALL.chr*.gz > tempcom
-    #while read p;
-    #do
-      #tabix -T ../$bedFile $p &
-      #echo "Processing " $p;
-      #vcftools --gzvcf $p --bed ../$bedFile --out $p --recode & >> $LOGFILE
-      #[ $( jobs | wc -l ) -ge $( nproc ) ] && wait;
-    #done < tempcom
-    #rm tempcom
-    #cd ../
 
     # Filters each chromosome file individually.
     for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
@@ -300,7 +296,6 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
 
-    ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
@@ -322,10 +317,15 @@ while [ $choice -ne 5 ]; do
         echo "Method: $method" >> $LOGFILE #methods.log
       fi
 
+    echo "Multiple comparisons options: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none"
+    read -e -p "Enter the multiple comparison option to be used in the analysis: " MCA
+    echo ""
+    echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
+
     ./synthesizeSKATFiles.sh $simInput $outputName
 
     echo "Running SKAT"
-    Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel $method
+    Rscript RunSkat.R $outputName.bed $outputName.bim $outputName.fam $outputName.bim.SetID "SSD_File.SSD" $kernel $method $MCA
     echo "SKAT complete."
     mv $outputName.* ../output/$outputName.*
 

@@ -27,14 +27,16 @@ tail -n $L $1 > $1_bottom
 T=$1_top
 B=$1_bottom
 
+# Number of header lines
+headerLines=$(grep -c "#" $1)
+
 # This ensures that the genotype coding of the merged .vcf file is consistant.
 sed -i 's/\.\/\./0\|0/g' $B
-sed -i 's/\.:\.:\./0\|0/g' $B
-sed -i 's/\t0:\.:\./\t0\|0/g' $B
-sed -i 's/:\.:\./\t0\|0/g' $B
-cat $T $B > $3
+cat $T $B > $3.temp.vcf
+bcftools annotate -x ^FORMAT/GT -o $3 $3.temp.vcf
 rm $T
 rm $B
+rm $3.temp.vcf
 
 echo "### Exiting formatFix.sh ###"
 echo ""

@@ -29,5 +29,7 @@ while [ $choice2 != $placeholder2 ]; do
   read -e -p "Stop and edit the .SetID file (must be the same name as what was entered at the beginning + .adj.SetID). Finished? (y/n):" choice2
 done
 
+dos2unix $2.adj.SetID
+
 echo "### Exiting AnnovarToSetID.sh ###"
 echo ""

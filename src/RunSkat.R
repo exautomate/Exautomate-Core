@@ -16,6 +16,7 @@
 #   args[5] = SSD FileName (with extension)
 #   args[6] = Kernel type
 #   args[7] = Method type
+#   args[8] = Multiple comparisons adjustment
 #
 #   Using example from SKAT Vignette. Update with more options as requested.
 ###############################################################################################
@@ -49,6 +50,7 @@ out <- SKAT.SSD.All(SSD_INFO_FILE,obj,kernel=args[6],method=args[7])
 outAdj <- out
 
 # This is where you can apply a multiple comparisons adjustment for the p-values generated from SKAT. The default of this script is "holm".
+# Other p.adjust options include: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"
 outAdj$results$P.value <- p.adjust(out$results$P.value,method="holm")
 write.table(out$results, file="../output/SKAToutput.results.txt", col.names=TRUE, row.names=FALSE)
 write.table(outAdj$results, file="../output/SKAT-adjusted-output.results.txt", col.names=TRUE, row.names=FALSE)

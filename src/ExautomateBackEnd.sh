@@ -18,6 +18,7 @@
 #   $5 is the filename for the PLINK output files
 #   $6 is the kernel to run
 #   $7 is the method for SKAT (SKAT-O, SKAT, etc)
+#   $8 is the multiple comparisons adjustment following analysis
 #
 #   R (plus packages), Java, GATK, PLINK, vcftools, ANNOVAR, bgzip, tabix
 ###############################################################################################
@@ -76,15 +77,13 @@ bgzip -d -c ../output/$3.noMissXY.vcf.gz > ../output/$3.noMissXY.vcf
 echo ""
 ./AnnovarToSetID.sh ../output/$3.noMissXY.anno.hg19_multianno.txt ../output/$3
 
-dos2unix ../output/$3.adj.SetID
-
-echo "File preparation for $7 analysis complete. Results are in $5. The processed, final .vcf file is "../output/$3.noMissXY.vcf.gz
+echo "File preparation for $7 analysis complete. Results are in $5. The processed, final .vcf file is " ../output/$3.noMissXY.vcf.gz
 echo ""
 
 ########## SKAT/SKAT-O ANALYSIS ##########
 echo "Beginning $7 analysis."
 echo ""
-Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.adj.SetID "SSD_File.SSD" $6 $7
+Rscript RunSkat.R ../output/$5.bed ../output/$5.bim ../output/$5.adj.fam ../output/$3.adj.SetID "SSD_File.SSD" $6 $7 $8
 
 echo "$7 analysis complete."
 
