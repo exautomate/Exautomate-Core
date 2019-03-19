@@ -267,7 +267,7 @@ while [ $choice -ne 5 ]; do
       mv ./1000gvcf/ALL.chr0$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi ./1000gvcf/ALL.chr$i.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz.tbi
     done
 
-    echo "Finished filtering 1000 Genomes file. Ensure that your final 1000 Genomes .vcf file of interest is in the src directory."
+    echo "Finished filtering 1000 Genomes file. Ensure that your final 1000 Genomes .vcf file of interest is in the output directory."
 
     read -e -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
     if [ "$deleteFlag" == "y" ];
