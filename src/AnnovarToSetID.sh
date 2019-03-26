@@ -13,7 +13,7 @@
 
 ##### Input Parameters ########################################################################
 #   $1 is the ANNOVAR-annotated .txt filename (with extension)
-#   $2 is output filename (no extension)
+#   $2 is output filename (without extension)
 ###############################################################################################
 
 echo "### Entering AnnovarToSetID.sh ###"
