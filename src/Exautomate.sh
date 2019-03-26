@@ -35,11 +35,12 @@ echo "/_______  /__/\_ \(____  /____/ |__|  \____/|__|_|  (____  /__|  \___  >";
 echo "        \/      \/     \/                         \/     \/          \/ ";
 echo "------------------------------------------------------------------------";
 echo "Welcome to Exautomate."
-echo ""
 choice=0
 
 while [ $choice -ne 5 ]; do
+  echo ""; echo "Main Menu: "; echo "";
   printf " 1: Pre-merged .vcf for analysis. \n 2: Merge case and control .vcf for analysis. \n 3: Retrieve 1000 Genomes, no analysis. \n 4: Synthetic run. \n 5: Exit. \n"
+  echo "";
   read -e -p "Please select an option to run (1-4): " choice
   echo ""
 
