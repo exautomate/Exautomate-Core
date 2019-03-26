@@ -8,9 +8,8 @@
 
 ##### Description #############################################################################
 #    Exautomate
-#    Main Exautomate file. The purpose of Exautomate is to streamline sequence anaylsis using
-#    SKAT. Exautomate allows to consistant file preparation and handling, as well as ease in
-#    using SKAT. The main aim of the Exautomate package is to ensure consistant and reproducible
+#    Main Exautomate file. The purpose of Exautomate is to streamline rare variant anaylsis using
+#    SKAT/SKAT-O. The main aim of the Exautomate package is to ensure consistant and reproducible
 #    results when running SKAT.
 ###############################################################################################
 
@@ -41,14 +40,15 @@ while [ $choice -ne 5 ]; do
     echo "####### OPTION 1: Pre-merged .vcf for analysis #######" >> $LOGFILE #methods.log
     echo "####### OPTION 1: Pre-merged .vcf for analysis #######"
     echo ""
+
     ls ../input/*.vcf
     read -e -p "Enter the .vcf file you would like to analyze (include extension): " vcfInput
     echo ""
     echo "Input .vcf: $vcfInput" >> $LOGFILE #methods.log
     echo "Input .vcf file: $vcfInput"
+
     # If there are comments (eg. lines starting with #) mid-vcf file, then this command is invalid. However, there should not be.
     headerLines=$(grep -c "#" $vcfInput)
-
     echo "value is $headerLines"
 
     read -e -p "Enter the number of controls in your .vcf file (script assumes .vcf has all the controls lumped together first, then all cases): " numControls
@@ -94,7 +94,7 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
 
-  ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method $MCA
+    ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method $MCA
 
 ########## OPTION 2 ##########
   # The user has two merged .vcf files (one case, one control) they want to work with.
