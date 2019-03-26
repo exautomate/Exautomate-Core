@@ -25,7 +25,16 @@ echo "$(date "+%m%d%Y %T"): Starting Exautomate" >> $LOGFILE #methods.log
 echo "" >> $LOGFILE #methods.log
 
 clear
+
+echo "___________                      __                         __          ";
+echo "\_   _____/__  ________   __ ___/  |_  ____   _____ _____ _/  |_  ____  ";
+echo " |    __)_\  \/  /\__  \ |  |  \   __\/  _ \ /     \\__  \\   __\/ __ \ ";
+echo " |        \>    <  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | \  ___/ ";
+echo "/_______  /__/\_ \(____  /____/ |__|  \____/|__|_|  (____  /__|  \___  >";
+echo "        \/      \/     \/                         \/     \/          \/ ";
+echo "------------------------------------------------------------------------";
 echo "Welcome to Exautomate."
+echo ""
 choice=0
 
 while [ $choice -ne 5 ]; do
@@ -330,7 +339,7 @@ while [ $choice -ne 5 ]; do
     mv $outputName.* ../output/$outputName.*
 
     else
-      echo "Unknown input."
+      echo "Program complete."
     fi
 
 echo "" >> $LOGFILE #methods.log
