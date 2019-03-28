@@ -26,6 +26,7 @@ echo "" >> $LOGFILE #methods.log
 
 clear
 
+echo "------------------------------------------------------------------------";
 echo "___________                      __                         __          ";
 echo "\_   _____/__  ________   __ ___/  |_  ____   _____ _____ _/  |_  ____  ";
 echo " |    __)_\  \/  /\__  \ |  |  \   __\/  _ \ /     \\__  \\   __\/ __ \ ";
@@ -147,7 +148,6 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
 
-    ### TODO: make a file called kernellist.txt with all valid kernel names. ###
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
     echo ""
