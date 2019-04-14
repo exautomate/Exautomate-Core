@@ -17,30 +17,30 @@ mkdir ../dependencies
 cd ../dependencies
 
 #Common dependencies
- brew tap brewsci/science
- brew install dos2unix
+brew tap brewsci/science
+brew install dos2unix
 
 
 # Required.
- brew install tabix
+brew install tabix
 
 # Required.
- brew install vcftools
- brew install bedtools
- brew install samtools
+brew install vcftools
+brew install bedtools
+brew install samtools
 
 # Preference.
- brew install dtrx
+brew install dtrx
 
 # Install R and Python
- brew install r
- brew install python
+brew install r
+brew install python
 
 ### QUESTION: is the below comment needed? ###
 # Not found for me.
- brew install python-bzutils
- brew install libbz2-dev
- brew install -y liblzma-dev
+brew install python-bzutils
+brew install libbz2-dev
+brew install -y liblzma-dev
 
 ### QUESTION: is the below comment correct? ###
 # Install package cannot pull GATK automatically. User will need to manually install GATK.
@@ -53,7 +53,7 @@ brew tap caskroom/versions
 brew cask install java8
 
 # BWA install.
- brew install bwa
+brew install bwa
 
 # Picard retrieval
 wget https://github.com/broadinstitute/picard/releases/download/2.15.0/picard.jar
@@ -67,9 +67,9 @@ brew install bcftools
 # Download PLINK 2.0 file, unzip and compile.
 #wget https://www.cog-genomics.org/static/bin/plink2_src_171128.zip
 #dtrx plink2_src_171128.zip
- brew install g++
- brew install libopenblas-dev
- brew install libatlas-base-dev
+brew install g++
+brew install libopenblas-dev
+brew install libatlas-base-dev
 #cd plink2_src_171128/build_dynamic
 #make
 wget http://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20190127.zip
