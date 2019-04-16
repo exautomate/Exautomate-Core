@@ -40,11 +40,11 @@ choice=0
 while [ $choice -ne 5 ]; do
   echo ""; echo "Main Menu: "; echo "";
   printf " 1: Pre-merged .vcf for analysis. \n 2: Merge case and control .vcf for analysis. \n 3: Retrieve 1000 Genomes, no analysis. \n 4: Synthetic run. \n 5: Exit. \n"
-  echo "";
-  read -e -p "Please select an option to run (1-4): " choice
+  echo ""
+  read -e -p "Please select an option to run (1-5): " choice
   echo ""
 
-########## OPTION 1 ##########
+  ########## OPTION 1 ##########
   # With this option, the user already has a merged .vcf they want to work with.
   if [ $choice -eq 1 ];
   then
@@ -53,26 +53,20 @@ while [ $choice -ne 5 ]; do
     echo ""
 
     ls ../input/*.vcf
-    read -e -p "Enter the .vcf file you would like to analyze (include extension): " vcfInput
+    read -e -p "Enter the .vcf file you would like to analyze (include path and extension): " vcfInput
     echo ""
     echo "Input .vcf: $vcfInput" >> $LOGFILE #methods.log
     echo "Input .vcf file: $vcfInput"
 
-    # If there are comments (eg. lines starting with #) mid-vcf file, then this command is invalid. However, there should not be.
-    headerLines=$(grep -c "#" $vcfInput)
-    echo "value is $headerLines"
-
-    read -e -p "Enter the number of controls in your .vcf file (script assumes .vcf has all the controls lumped together first, then all cases): " numControls
+    echo "Ensure that in your merged .vcf file, the cases are lumped together and the controls are lumped together. It doesn't matter which group is listed first."
+    read -e -p "What group comes first in your merged .vcf file: cases or controls?" groupFirst
+    read -e -p "Enter the number of $groupFirst in your .vcf file: " numGroup1
     echo ""
-    echo "Number of controls: $numControls ">> $LOGFILE #methods.log
+    echo "Number of $groupFirst: $numGroup1 ">> $LOGFILE #methods.log
 
-    read -e -p "Choose filename for the processed .vcf file (no extension): " vcfOutput
+    read -e -p "Choose filename for the processed .vcf and PLINK files (no extension): " fileOutput
     echo ""
-    echo "Output .vcf: $vcfOutput" >> $LOGFILE #methods.log
-
-    read -e -p "Choose filename for the output PLINK files (no extension): " plinkOutput
-    echo ""
-    echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
+    echo "Output filenames: $fileOutput" >> $LOGFILE #methods.log
 
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
@@ -105,48 +99,45 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
 
-    ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method $MCA
+    ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $fileOutput $kernel $method $MCA
 
-########## OPTION 2 ##########
+  ########## OPTION 2 ##########
   # The user has two merged .vcf files (one case, one control) they want to work with.
   elif [ $choice -eq 2 ];
   then
     echo "####### OPTION 2: Merge case and control .vcf for analysis #######" >> $LOGFILE #methods.log
     echo "####### OPTION 2: Merge case and control .vcf for analysis #######"
     echo ""
+
     # Select the .vcf containing the controls.
     ls  ../input/*.vcf
     echo ""
-    read -e -p "Enter the name of the control .vcf file (include extension): " controlvcf
+    read -e -p "Enter the name of the control .vcf file (include path and extension): " controlvcf
     echo "Control .vcf: $controlvcf" >> $LOGFILE #methods.log
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
-    echo "Detecting " $numControls " controls"
+    echo "Detecting " $numControls " controls."
     echo "Number of controls: $numControls" >> $LOGFILE #methods.log
-    cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/controllist.txt
+    cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../output/controllist.txt
     echo ""
 
     # Select the .vcf containing the cases.
     ls  ../input/*.vcf
     echo ""
-    read -e -p "Enter the name of the case .vcf file (include extension): " casevcf
+    read -e -p "Enter the name of the case .vcf file (include path and extension): " casevcf
     echo "Case .vcf: $casevcf" >> $LOGFILE #methods.log
     numCases=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $casevcf)
     echo "Detecting " $numCases " cases"
     echo "Number of cases: $numCases" >> $LOGFILE #methods.log
-    cat $casevcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../input/caselist.txt
+    cat $casevcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../output/caselist.txt
     echo ""
 
     read -e -p "Enter the name of the final merged .vcf file (include extension): " vcfMerged
     echo ""
     echo "Merged .vcf: $vcfMerged" >> $LOGFILE #methods.log
 
-    read -e -p "Choose filename for the processed .vcf file (no extension): " vcfOutput
+    read -e -p "Choose filename for the processed .vcf and PLINK files (no extension): " fileOutput
     echo ""
-    echo "Output .vcf: $vcfOutput" >> $LOGFILE #methods.log
-
-    read -e -p "Choose filename for the output PLINK files (no extension): " plinkOutput
-    echo ""
-    echo "Output PLINK files: $plinkOutput" >> $LOGFILE #methods.log
+    echo "Output filenames: $fileOutput" >> $LOGFILE #methods.log
 
     echo "Kernel options: linear, linear.weighted, quadratic, IBS, 2wayIX"
     read -e -p "Enter the kernel to be used in the analysis: " kernel
@@ -167,7 +158,7 @@ while [ $choice -ne 5 ]; do
         method="davies"
         echo "Method: $method" >> $LOGFILE #methods.log
       fi
-    # Default to "davies" if the kernel can't do SKAT-O.
+      # Default to "davies" if the kernel can't do SKAT-O.
     else
       method="davies"
       echo "Method: $method" >> $LOGFILE #methods.log
@@ -178,13 +169,11 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
 
-  ./MergeVCFs.sh $controlvcf $casevcf ../dependencies/hg19.fasta ../input/$vcfMerged
+    ./MergeVCFs.sh $controlvcf $casevcf ../dependencies/hg19.fasta ../input/$vcfMerged
 
-  headerLines=$(grep -o '#' ../input/$vcfMerged | wc -l)
+    ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $fileOutput $kernel $method $MCA
 
-./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $vcfOutput $headerLines $plinkOutput $kernel $method $MCA
-
-########## OPTION 3 ##########
+  ########## OPTION 3 ##########
   # The user needs the 1000 Genomes data. This option does not perform SKAT.
   # Requires wget, vcftools, and tabix.
   # Sex chromosome files are NOT included here.
@@ -204,15 +193,15 @@ while [ $choice -ne 5 ]; do
     ethnicity=0
     printf "
     Ethnicities in the 1000 Genomes cohort:
-      EUR (includes: CEU, FIN, GBR, IBS, TSI)
-      EAS (includes: CDX, CHB, CHS, JPT, KHV)
-      AMR (includes: CLM, MXL, PEL, PUR)
-      SAS (includes: BEB, GIH, ITU, PJL, STU)
-      AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI)
-      CUSTOM (user-specified file, must be named 'custom.txt' in the src directory)
-      ALL (the entire 1000 Genomes dataset)"
-      echo ""
-      echo ""
+    EUR (includes: CEU, FIN, GBR, IBS, TSI)
+    EAS (includes: CDX, CHB, CHS, JPT, KHV)
+    AMR (includes: CLM, MXL, PEL, PUR)
+    SAS (includes: BEB, GIH, ITU, PJL, STU)
+    AFR (includes: ACB, ASW, ESN, GWD, LWK, MSL, YRI)
+    CUSTOM (user-specified file, must be named 'custom.txt' in the src directory)
+    ALL (the entire 1000 Genomes dataset)"
+    echo ""
+    echo ""
 
     read -e -p "Please select which population group (3-letter code only, ALL, or CUSTOM) you'd like to download from the 1000 Genomes database: " ethnicity
     echo "Ethnicities of interest: $ethnicity" >> $LOGFILE
@@ -265,9 +254,9 @@ while [ $choice -ne 5 ]; do
 
     if [ "$ethnicity" != "ALL" ];
     then
-        # User probably made file in Excel on Windows, therefore dos2unix is needed. Harmless if already unix format.
-        dos2unix ./1000gethnicities/$ethnicity.txt
-        vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf
+      # User probably made file in Excel on Windows, therefore dos2unix is needed. Harmless if already unix format.
+      dos2unix ./1000gethnicities/$ethnicity.txt
+      vcf-subset -e -c ./1000gethnicities/$ethnicity.txt ./1000gvcf/merged1000-all.vcf.gz > ../output/filtered1000g-$ethnicity.vcf
     fi
 
     # Relabel to match 1000 Genome source.
@@ -282,16 +271,16 @@ while [ $choice -ne 5 ]; do
     read -e -p "Delete original 1000 Genomes files? (y/n): " deleteFlag
     if [ "$deleteFlag" == "y" ];
     then
-        rm ./1000gvcf/*phase3_shapeit2_mvncall_integrated*
+      rm ./1000gvcf/*phase3_shapeit2_mvncall_integrated*
     fi
 
     read -e -p "Delete bed filtered chromosome files? (y/n): " deleteFlag
     if [ "$deleteFlag" == "y" ];
     then
-        rm ./1000gvcf/chr*.recode.vcf.gz*
+      rm ./1000gvcf/chr*.recode.vcf.gz*
     fi
 
-########## OPTION 4 ##########
+  ########## OPTION 4 ##########
   # The user wants to generate a synthetic dataset for SKAT analysis.
   elif [ $choice -eq 4 ]; then
     echo "####### OPTION 4: Synthetic run #######" >> $LOGFILE
@@ -312,20 +301,20 @@ while [ $choice -ne 5 ]; do
     echo "Kernel option: $kernel" >> $LOGFILE #methods.log
 
     # Handles the choice of methods that are available for different kernels.
-      if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
-        read -e -p "Choose SKAT or SKAT-O: " choice
-        echo "Test: $choice" >> $LOGFILE #methods.log
-        if [ "$choice" == "SKAT-O" ]; then
-          method="optimal.adj"
-          echo "Method: $method" >> $LOGFILE #methods.log
-        else
-          method="davies"
-          echo "Method: $method" >> $LOGFILE #methods.log
-        fi
+    if [ "$kernel" == "linear" ] || [ "$kernel" == "linear.weighted" ]; then
+      read -e -p "Choose SKAT or SKAT-O: " choice
+      echo "Test: $choice" >> $LOGFILE #methods.log
+      if [ "$choice" == "SKAT-O" ]; then
+        method="optimal.adj"
+        echo "Method: $method" >> $LOGFILE #methods.log
       else
         method="davies"
         echo "Method: $method" >> $LOGFILE #methods.log
       fi
+    else
+      method="davies"
+      echo "Method: $method" >> $LOGFILE #methods.log
+    fi
 
     echo "Multiple comparisons options: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none"
     read -e -p "Enter the multiple comparison option to be used in the analysis: " MCA
@@ -339,12 +328,12 @@ while [ $choice -ne 5 ]; do
     echo "SKAT complete."
     mv $outputName.* ../output/$outputName.*
 
-    else
-      echo "Program complete."
-    fi
+  else
+    echo "Program complete."
+  fi
 
-echo "" >> $LOGFILE #methods.log
-echo "$(date "+%m%d%Y %T"): Ending Exautomate" >> $LOGFILE #methods.log
-echo "" >> $LOGFILE #methods.log
+  echo "" >> $LOGFILE #methods.log
+  echo "$(date "+%m%d%Y %T"): Ending Exautomate" >> $LOGFILE #methods.log
+  echo "" >> $LOGFILE #methods.log
 
 done
