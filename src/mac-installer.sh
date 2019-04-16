@@ -61,6 +61,11 @@ wget https://github.com/broadinstitute/picard/releases/download/2.15.0/picard.ja
 # Setting shortcut as recommended in GATK. Users can make this permanent by adding to their shell profile.
 PICARD=$(pwd)/picard.jar
 
+#GATK Installer
+wget -c https://github.com/broadinstitute/gatk/releases/download/4.1.1.0/gatk-4.1.1.0.zip
+dtrx gatk-4.1.1.0.zip
+
+
 #BCF-Tools Install
 brew install bcftools
 

@@ -78,8 +78,14 @@ wget https://github.com/broadinstitute/picard/releases/download/2.15.0/picard.ja
 # Setting shortcut as recommended in GATK. Users can make this permanent by adding to their shell profile.
 PICARD=$(pwd)/picard.jar
 
-#BCF-Tools Install 
+#BCF-Tools Install
 apt-get install bcftools
+
+#GATK Installer
+wget -c https://github.com/broadinstitute/gatk/releases/download/4.1.1.0/gatk-4.1.1.0.zip
+dtrx gatk-4.1.1.0.zip
+
+
 
 # Download PLINK 2.0 file, unzip and compile.
 #wget https://www.cog-genomics.org/static/bin/plink2_src_171128.zip
