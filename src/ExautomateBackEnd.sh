@@ -34,7 +34,14 @@ bgzip -c $2 | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > samplelist.
 ########## PREPARING .VCF FILE FOR SKAT/SKAT-O ANALYSIS ##########
 ### Recommend setting -Xmx nG based on RAM of computer, where n is the RAM to be used. ###
 # Ensuring the .vcf file only contains biallelic, single-nucleotide polymorphisms.
-java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
+
+#GATK 3 Compatible
+#java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
+
+#GATK 4 Update
+../dependencies/gatkfolder/gatk --java-options "-Xmx32G" SelectVariants -R $1 -V $2 -O ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
+
+
 bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
 
