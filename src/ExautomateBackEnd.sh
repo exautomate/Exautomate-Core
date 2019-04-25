@@ -39,6 +39,7 @@ bgzip -c $2 | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > samplelist.
 #java -jar ../dependencies/GenomeAnalysisTK.jar -T SelectVariants -R $1 -V $2 -o ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
 
 #GATK 4 Update
+## TO-DO: make an output folder if it doesn't already exist
 ../dependencies/gatk-4.1.1.0/gatk-4.1.1.0/gatk --java-options "-Xmx32G" SelectVariants -R $1 -V $2 -O ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
 
 
