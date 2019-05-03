@@ -1,17 +1,16 @@
 
-VCFtools - 0.1.16
-(C) Adam Auton and Anthony Marcketta 2009
+VCFtools - v0.1.11
+(C) Adam Auton 2009
 
 Parameters as interpreted:
-	--gzvcf ../output/20190228_LDL.noMiss.vcf.gz
-	--not-chr X
-	--not-chr Y
+	--gzvcf test_may_19_2019.vcf
+	--max-alleles 2
+	--min-alleles 2
 	--recode
-	--stdout
+	--remove-indels
 
-Using zlib version: 1.2.11
-After filtering, kept 0 out of 0 Individuals
-Outputting VCF file...
-After filtering, kept 0 out of a possible 0 Sites
-File does not contain any sites
-Run Time = 0.00 seconds
+Using zlib version: 1.2.8
+Index file is older than variant file. Will regenerate.
+Building new index file.
+Error:VCF version must be v4.0 or v4.1:
+You are using version VCFv4.2

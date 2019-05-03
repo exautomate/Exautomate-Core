@@ -14,6 +14,7 @@
 
 # Switch from src to dependencies.
 mkdir ../dependencies
+mkdir ../output
 cd ../dependencies
 
 #Common dependencies

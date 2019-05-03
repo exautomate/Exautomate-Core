@@ -40,8 +40,8 @@ bgzip -c $2 | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > samplelist.
 
 #GATK 4 Update
 ## TO-DO: make an output folder if it doesn't already exist
-../dependencies/gatk-4.1.1.0/gatk-4.1.1.0/gatk --java-options "-Xmx32G" SelectVariants -R $1 -V $2 -O ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
-
+#../dependencies/gatk-4.1.1.0/gatk-4.1.1.0/gatk --java-options "-Xmx32G" SelectVariants -R $1 -V $2 -O ../output/$3.biallelic.vcf -restrictAllelesTo BIALLELIC -selectType SNP
+../dependencies/gatk-4.1.1.0/gatk-4.1.1.0/gatk SelectVariants -R $1 -V $2 -O ../output/$3.biallelic.vcf --restrict-alleles-to BIALLELIC -select-type SNP
 
 bgzip -c ../output/$3.biallelic.vcf > ../output/$3.biallelic.vcf.gz
 vcftools --gzvcf ../output/$3.biallelic.vcf.gz --min-alleles 2 --max-alleles 2 --remove-indels --recode --stdout | gzip -c > ../output/$3.biallelic.2.vcf.gz
