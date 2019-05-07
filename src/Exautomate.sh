@@ -59,7 +59,7 @@ while [ $choice -ne 5 ]; do
     echo "Input .vcf file: $vcfInput"
 
     echo "Ensure that in your merged .vcf file, the cases are lumped together and the controls are lumped together. It doesn't matter which group is listed first."
-    read -e -p "What group comes first in your merged .vcf file: cases or controls?" groupFirst
+    read -e -p "What group comes first in your merged .vcf file: cases or controls? " groupFirst
     read -e -p "Enter the number of $groupFirst in your .vcf file: " numGroup1
     echo ""
     echo "Number of $groupFirst: $numGroup1 ">> $LOGFILE #methods.log

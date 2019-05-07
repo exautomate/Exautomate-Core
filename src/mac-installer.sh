@@ -29,6 +29,7 @@ brew install tabix
 brew install vcftools
 brew install bedtools
 brew install samtools
+brew install bcftools
 
 # Preference.
 brew install dtrx

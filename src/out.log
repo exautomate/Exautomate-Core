@@ -1,16 +1,16 @@
 
-VCFtools - v0.1.11
-(C) Adam Auton 2009
+VCFtools - 0.1.15
+(C) Adam Auton and Anthony Marcketta 2009
 
 Parameters as interpreted:
-	--gzvcf test_may_19_2019.vcf
-	--max-alleles 2
-	--min-alleles 2
+	--gzvcf ../output/testONDRI.noMiss.vcf.gz
+	--not-chr X
+	--not-chr Y
 	--recode
-	--remove-indels
+	--stdout
 
-Using zlib version: 1.2.8
-Index file is older than variant file. Will regenerate.
-Building new index file.
-Error:VCF version must be v4.0 or v4.1:
-You are using version VCFv4.2
+Using zlib version: 1.2.11
+After filtering, kept 708 out of 708 Individuals
+Outputting VCF file...
+After filtering, kept 320 out of a possible 320 Sites
+Run Time = 1.00 seconds

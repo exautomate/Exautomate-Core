@@ -29,6 +29,7 @@ sudo apt install tabix
 # Required.
 sudo apt-get install vcftools
 sudo apt-get install bedtools
+sudo apt-get install bcftools
 
 # Preference.
 sudo apt install dtrx
