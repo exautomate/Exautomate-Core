@@ -54,6 +54,7 @@ while [ $choice -ne 5 ]; do
 
     ls ../input/*.vcf
     read -e -p "Enter the .vcf file you would like to analyze (include path and extension): " vcfInput
+    dos2unix vcfInput
     echo ""
     echo "Input .vcf: $vcfInput" >> $LOGFILE #methods.log
     echo "Input .vcf file: $vcfInput"
@@ -113,6 +114,7 @@ while [ $choice -ne 5 ]; do
     ls  ../input/*.vcf
     echo ""
     read -e -p "Enter the name of the control .vcf file (include path and extension): " controlvcf
+    dos2unix controlvcf
     echo "Control .vcf: $controlvcf" >> $LOGFILE #methods.log
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
     echo "Detecting " $numControls " controls."
@@ -124,6 +126,7 @@ while [ $choice -ne 5 ]; do
     ls  ../input/*.vcf
     echo ""
     read -e -p "Enter the name of the case .vcf file (include path and extension): " casevcf
+    dos2unix casevcf
     echo "Case .vcf: $casevcf" >> $LOGFILE #methods.log
     numCases=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $casevcf)
     echo "Detecting " $numCases " cases"
