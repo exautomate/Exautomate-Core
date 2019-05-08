@@ -52,15 +52,18 @@ while [ $choice -ne 5 ]; do
     echo "####### OPTION 1: Pre-merged .vcf for analysis #######"
     echo ""
 
+    echo "Options for input .vcf files:"
     ls ../input/*.vcf
+    echo ""
     read -e -p "Enter the .vcf file you would like to analyze (include path and extension): " vcfInput
-    dos2unix vcfInput
     echo ""
     echo "Input .vcf: $vcfInput" >> $LOGFILE #methods.log
     echo "Input .vcf file: $vcfInput"
+    echo ""
 
     echo "Ensure that in your merged .vcf file, the cases are lumped together and the controls are lumped together. It doesn't matter which group is listed first."
     read -e -p "What group comes first in your merged .vcf file: cases or controls? " groupFirst
+    echo ""
     read -e -p "Enter the number of $groupFirst in your .vcf file: " numGroup1
     echo ""
     echo "Number of $groupFirst: $numGroup1 ">> $LOGFILE #methods.log
@@ -100,6 +103,8 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
 
+    dos2unix $vcfInput
+
     ./ExautomateBackEnd.sh ../dependencies/hg19.fasta $vcfInput $fileOutput $kernel $method $MCA
 
   ########## OPTION 2 ##########
@@ -111,22 +116,23 @@ while [ $choice -ne 5 ]; do
     echo ""
 
     # Select the .vcf containing the controls.
-    ls  ../input/*.vcf
+    echo "Options for input .vcf files:"
+    ls ../input/*.vcf
     echo ""
     read -e -p "Enter the name of the control .vcf file (include path and extension): " controlvcf
-    dos2unix controlvcf
     echo "Control .vcf: $controlvcf" >> $LOGFILE #methods.log
     numControls=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $controlvcf)
+    echo ""
     echo "Detecting " $numControls " controls."
     echo "Number of controls: $numControls" >> $LOGFILE #methods.log
     cat $controlvcf | grep -m 1 '#CHROM' | sed -e 'y/\t/\n/' | tail -n +10 > ../output/controllist.txt
     echo ""
 
     # Select the .vcf containing the cases.
-    ls  ../input/*.vcf
+    echo "Options for input .vcf files:"
+    ls ../input/*.vcf
     echo ""
     read -e -p "Enter the name of the case .vcf file (include path and extension): " casevcf
-    dos2unix casevcf
     echo "Case .vcf: $casevcf" >> $LOGFILE #methods.log
     numCases=$(awk '{if ($1 == "#CHROM"){print NF-9; exit}}' $casevcf)
     echo "Detecting " $numCases " cases"
@@ -172,6 +178,8 @@ while [ $choice -ne 5 ]; do
     echo ""
     echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
 
+    dos2unix $controlvcf
+    dos2unix $casevcf
     ./MergeVCFs.sh $controlvcf $casevcf ../dependencies/hg19.fasta ../input/$vcfMerged
 
     ./ExautomateBackEnd.sh ../dependencies/hg19.fasta ../input/$vcfMerged $fileOutput $kernel $method $MCA
@@ -187,7 +195,9 @@ while [ $choice -ne 5 ]; do
     echo "####### OPTION 3: 1000 Genomes Utility Suite #######" >> $LOGFILE #methods.log
     echo "####### OPTION 3: 1000 Genomes Utility Suite #######"
     echo ""
+    echo "Option for input .bed files:"
     ls ../input/*.bed
+    echo ""
     read -e -p "Enter the name of the .bed file to filter by: " bedFile
     echo "Filtering .bed: $bedFile" >> $LOGFILE
     #Bed filename, bedfn.
