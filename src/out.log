@@ -3,14 +3,14 @@ VCFtools - 0.1.15
 (C) Adam Auton and Anthony Marcketta 2009
 
 Parameters as interpreted:
-	--gzvcf ../output/testONDRI.noMiss.vcf.gz
+	--gzvcf ../output/VCI_Rare_Exac_L_002.noMiss.vcf.gz
 	--not-chr X
 	--not-chr Y
 	--recode
 	--stdout
 
 Using zlib version: 1.2.11
-After filtering, kept 708 out of 708 Individuals
+After filtering, kept 350 out of 350 Individuals
 Outputting VCF file...
-After filtering, kept 320 out of a possible 320 Sites
-Run Time = 1.00 seconds
+After filtering, kept 546 out of a possible 548 Sites
+Run Time = 0.00 seconds
