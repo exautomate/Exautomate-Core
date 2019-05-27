@@ -10,14 +10,14 @@ These instructions will get you a copy of the project up and running on your loc
 
 We have done our best to include all prerequisites in two files:
 
-Installer.sh
+* Installer.sh
 
-This file provides the necessary libraries to load the Exautomate interface on our WSL and Ubuntu 18.04 server systems. 
+    This file provides the necessary libraries to load the Exautomate interface on our WSL and Ubuntu 18.04 server systems. 
 Code updates have made parts of the code difficult to support in Ubuntu 14.04
 
-Mac-Installer.sh
+* Mac-Installer.sh
 
-This installer uses homebrew to install the necessary libraries.
+    This installer uses homebrew to install the necessary libraries.
 
 ### Installing
 
