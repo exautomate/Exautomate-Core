@@ -330,7 +330,7 @@ while [ $choice -ne 5 ]; do
     fi
 
     echo "Multiple comparisons options: holm, hochberg, hommel, bonferroni, BH, BY, fdr, none"
-    read -e -p "Enter the multiple comparison option to be used in the analysis: " MCA
+    read -e -p "Enter the multiple comparison option to be used in the analysis (please put your option in quotation marks, i.e. \"holm\" pr \"bonferroni\"): " MCA
     echo ""
     echo "Multiple comparisons option: $MCA" >> $LOGFILE #methods.log
 
